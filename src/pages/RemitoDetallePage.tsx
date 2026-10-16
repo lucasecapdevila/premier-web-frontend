@@ -117,7 +117,7 @@ export const RemitoDetallePage: React.FC = () => {
     };
   }, [numero, navigate]);
 
-  const handleAnular = async (e: React.FormEvent) => {
+  const handleAnular = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!motivoAnula.trim()) {
       toast.error('El motivo de anulación es obligatorio');

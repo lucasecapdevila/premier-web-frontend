@@ -15,47 +15,7 @@ import {
   RefreshCw
 } from 'lucide-react';
 import { api } from '../lib/api';
-
-interface ArticuloDetalle {
-  codart: number;
-  descripcion: string;
-  cantidad: number;
-  precio: number;
-  observa: string;
-}
-
-interface UnidadDetalle {
-  id: number;
-  unicode: number;
-  motor: string;
-  chasis: string;
-  color_codigo: string;
-  color_nombre: string;
-  codart: number;
-  descripcion: string;
-  fecha_mov: string;
-  estado: number;
-}
-
-interface RemitoDetalleResponse {
-  remito: {
-    nro: number;
-    de: number;
-    de_nombre: string;
-    a: number;
-    a_nombre: string;
-    operador: string;
-    fecha: string;
-    fecha_dt: string;
-    es_anulado: boolean;
-    en_ventana_24h: boolean;
-    motivo_anula: string;
-    motivo_edic: string;
-  };
-  articulos: ArticuloDetalle[];
-  unidades: UnidadDetalle[];
-  total_unidades: number;
-}
+import type { RemitoDetalleResponse } from '../types';
 
 export const RemitoDetallePage: React.FC = () => {
   const { numero } = useParams<{ numero: string }>();
@@ -67,19 +27,15 @@ export const RemitoDetallePage: React.FC = () => {
   const [motivoAnula, setMotivoAnula] = useState('');
   const [procesandoAnula, setProcesandoAnula] = useState(false);
 
-  // Función explícita para recargar a demanda (ej. tras anular o refrescar)
-  const refrescarDatos = async () => {
+  const refrescarDatos = async (): Promise<void> => {
     if (!numero) return;
     setLoading(true);
     try {
       const res = await api.get<RemitoDetalleResponse>(`/remitos/${numero}`);
       setData(res.data);
     } catch (error: unknown) {
-      toast.error(
-        (error && typeof error === 'object' && 'response' in error
-          ? (error as { response?: { data?: { message?: string } } }).response?.data?.message
-          : undefined) || 'Error al obtener el remito'
-      );
+      const err = error as { response?: { data?: { message?: string } } };
+      toast.error(err.response?.data?.message ?? 'Error al obtener el remito');
       navigate('/remitos');
     } finally {
       setLoading(false);
@@ -89,7 +45,7 @@ export const RemitoDetallePage: React.FC = () => {
   useEffect(() => {
     let activo = true;
 
-    const fetchDetalle = async () => {
+    const fetchDetalle = async (): Promise<void> => {
       if (!numero) return;
       try {
         const res = await api.get<RemitoDetalleResponse>(`/remitos/${numero}`);
@@ -99,25 +55,22 @@ export const RemitoDetallePage: React.FC = () => {
         }
       } catch (error: unknown) {
         if (activo) {
-          toast.error(
-            (error && typeof error === 'object' && 'response' in error
-              ? (error as { response?: { data?: { message?: string } } }).response?.data?.message
-              : undefined) || 'Error al obtener el remito'
-          );
+          const err = error as { response?: { data?: { message?: string } } };
+          toast.error(err.response?.data?.message ?? 'Error al obtener el remito');
           setLoading(false);
           navigate('/remitos');
         }
       }
     };
 
-    fetchDetalle();
+    void fetchDetalle();
 
     return () => {
       activo = false;
     };
   }, [numero, navigate]);
 
-  const handleAnular = async (e: React.FormEvent) => {
+  const handleAnular = async (e: SubmitEvent): Promise<void> => {
     e.preventDefault();
     if (!motivoAnula.trim()) {
       toast.error('El motivo de anulación es obligatorio');
@@ -134,11 +87,8 @@ export const RemitoDetallePage: React.FC = () => {
       setMotivoAnula('');
       await refrescarDatos();
     } catch (error: unknown) {
-      const mensaje =
-        error && typeof error === 'object' && 'response' in error
-          ? (error as { response?: { data?: { message?: string } } }).response?.data?.message
-          : undefined;
-      toast.error(mensaje || 'Error al anular el remito');
+      const err = error as { response?: { data?: { message?: string } } };
+      toast.error(err.response?.data?.message ?? 'Error al anular el remito');
     } finally {
       setProcesandoAnula(false);
     }
@@ -160,10 +110,10 @@ export const RemitoDetallePage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Barra superior de navegación */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-5">
         <div className="flex items-center gap-3">
           <button
+            type="button"
             onClick={() => navigate('/remitos')}
             className="p-2 bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white rounded-lg border border-slate-800 transition-colors"
             title="Volver al listado"
@@ -193,10 +143,10 @@ export const RemitoDetallePage: React.FC = () => {
           </div>
         </div>
 
-        {/* Acciones contextuales */}
         <div className="flex items-center gap-3">
           {!remito.es_anulado && remito.en_ventana_24h && (
             <button
+              type="button"
               onClick={() => setModalAnulacion(true)}
               className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-red-600/20 hover:bg-red-600/30 text-red-400 border border-red-800/60 rounded-lg text-sm font-medium transition-colors"
             >
@@ -207,7 +157,8 @@ export const RemitoDetallePage: React.FC = () => {
 
           {!remito.es_anulado && !esCompra && remito.en_ventana_24h && (
             <button
-              onClick={() => toast('Selector de reemplazo en construcción', { icon: 'ℹ️' })}
+              type="button"
+              onClick={() => toast('Selector de reemplazo en modal en curso', { icon: 'ℹ️' })}
               className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-sm font-medium transition-colors shadow-lg shadow-blue-600/20"
             >
               <RefreshCw size={16} />
@@ -217,7 +168,6 @@ export const RemitoDetallePage: React.FC = () => {
         </div>
       </div>
 
-      {/* Alertas informativas */}
       {remito.es_anulado && (
         <div className="p-4 bg-red-950/30 border border-red-800/50 rounded-xl flex items-start gap-3 text-red-300 text-sm">
           <AlertTriangle className="shrink-0 text-red-400 mt-0.5" size={18} />
@@ -238,7 +188,6 @@ export const RemitoDetallePage: React.FC = () => {
         </div>
       )}
 
-      {/* Tarjetas de cabecera */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
           <div className="text-xs uppercase text-slate-500 font-semibold tracking-wider flex items-center gap-1.5 mb-2">
@@ -297,7 +246,6 @@ export const RemitoDetallePage: React.FC = () => {
         </div>
       </div>
 
-      {/* Artículos declarados */}
       <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
         <div className="px-4 py-3 bg-slate-800/50 border-b border-slate-800 flex items-center justify-between">
           <h2 className="text-sm font-semibold text-white flex items-center gap-2">
@@ -327,7 +275,6 @@ export const RemitoDetallePage: React.FC = () => {
         </table>
       </div>
 
-      {/* Trazabilidad de unidades físicas */}
       <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-xl">
         <div className="px-4 py-3 bg-slate-800/50 border-b border-slate-800 flex items-center justify-between">
           <h2 className="text-sm font-semibold text-white flex items-center gap-2">
@@ -374,7 +321,6 @@ export const RemitoDetallePage: React.FC = () => {
         </table>
       </div>
 
-      {/* Modal de Anulación */}
       {modalAnulacion && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-slate-900 border border-slate-800 rounded-xl max-w-md w-full p-6 shadow-2xl">
@@ -386,7 +332,7 @@ export const RemitoDetallePage: React.FC = () => {
               Esta acción revertirá las ubicaciones de stock o dará la baja lógica correspondiente según el origen del movimiento.
             </p>
 
-            <form onSubmit={handleAnular} className="space-y-4">
+            <form onSubmit={(e) => void handleAnular(e.nativeEvent)} className="space-y-4">
               <div>
                 <label className="block text-xs font-semibold text-slate-300 uppercase mb-1.5">
                   Motivo de Anulación (* Obligatorio)

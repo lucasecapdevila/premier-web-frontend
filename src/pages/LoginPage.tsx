@@ -1,21 +1,21 @@
-import React, { useState, type SubmitEvent } from 'react';
+import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { Lock, User, ArrowRight } from 'lucide-react';
 import { useAuthStore } from '../stores/useAuthStore';
 
 export const LoginPage: React.FC = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [username, setUsername] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
 
   const login = useAuthStore((state) => state.login);
   const navigate = useNavigate();
   const location = useLocation();
 
-  const from = (location.state as { from?: { pathname: string } })?.from?.pathname || '/remitos';
+  const from = (location.state as { from?: { pathname: string } })?.from?.pathname ?? '/remitos';
 
-  const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: SubmitEvent): Promise<void> => {
     e.preventDefault();
     if (!username.trim() || !password) {
       toast.error('Ingrese usuario y contraseña');
@@ -28,7 +28,8 @@ export const LoginPage: React.FC = () => {
       toast.success('Sesión iniciada correctamente');
       navigate(from, { replace: true });
     } catch (error: unknown) {
-      const mensaje = (error as { response?: { data?: { message?: string } } }).response?.data?.message || 'Error al iniciar sesión';
+      const err = error as { response?: { data?: { message?: string } } };
+      const mensaje = err.response?.data?.message ?? 'Error al iniciar sesión';
       toast.error(mensaje);
     } finally {
       setLoading(false);
@@ -46,7 +47,7 @@ export const LoginPage: React.FC = () => {
           <p className="text-slate-400 text-sm mt-1">Gestión Centralizada de Remitos y Unidades</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={(e) => void handleSubmit(e.nativeEvent)} className="space-y-5">
           <div>
             <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
               Usuario
@@ -58,7 +59,7 @@ export const LoginPage: React.FC = () => {
               <input
                 type="text"
                 value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)}
                 placeholder="Ej. lucas"
                 disabled={loading}
                 className="w-full pl-10 pr-4 py-2.5 bg-slate-900/60 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all disabled:opacity-50"
@@ -77,7 +78,7 @@ export const LoginPage: React.FC = () => {
               <input
                 type="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
                 placeholder="••••••••"
                 disabled={loading}
                 className="w-full pl-10 pr-4 py-2.5 bg-slate-900/60 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all disabled:opacity-50"

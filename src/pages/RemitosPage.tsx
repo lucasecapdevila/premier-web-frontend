@@ -13,18 +13,20 @@ import {
   Eye
 } from 'lucide-react';
 import { useRemitosStore } from '../stores/useRemitosStore';
+import type { RemitoConsolidado } from '../types';
 
 export const RemitosPage: React.FC = () => {
   const { remitos, loading, cargarRemitos, filtroTexto, setFiltroTexto } = useRemitosStore();
   const navigate = useNavigate();
 
   useEffect(() => {
-    cargarRemitos().catch((error) => {
-      toast.error((error as { response?: { data?: { message?: string } } }).response?.data?.message || 'Error al obtener remitos');
+    cargarRemitos().catch((error: unknown) => {
+      const err = error as { response?: { data?: { message?: string } } };
+      toast.error(err.response?.data?.message ?? 'Error al obtener remitos');
     });
   }, [cargarRemitos]);
 
-  const remitosFiltrados = remitos.filter((r) => {
+  const remitosFiltrados = remitos.filter((r: RemitoConsolidado): boolean => {
     if (!filtroTexto.trim()) return true;
     const q = filtroTexto.toLowerCase().trim();
     return (
@@ -37,7 +39,6 @@ export const RemitosPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Cabecera y Acciones */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-5">
         <div>
           <h1 className="text-2xl font-bold text-white tracking-tight flex items-center gap-2">
@@ -51,7 +52,8 @@ export const RemitosPage: React.FC = () => {
 
         <div className="flex items-center gap-3">
           <button
-            onClick={() => cargarRemitos()}
+            type="button"
+            onClick={() => void cargarRemitos()}
             disabled={loading}
             className="p-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg border border-slate-700 transition-colors disabled:opacity-50"
             title="Recargar datos"
@@ -60,6 +62,7 @@ export const RemitosPage: React.FC = () => {
           </button>
 
           <button
+            type="button"
             onClick={() => navigate('/remitos/nuevo')}
             className="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium rounded-lg shadow-lg shadow-blue-600/20 transition-all"
           >
@@ -69,18 +72,18 @@ export const RemitosPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Barra de Búsqueda Rápida */}
       <div className="flex items-center bg-slate-900 border border-slate-800 rounded-lg px-3.5 py-2 max-w-md">
         <Search size={16} className="text-slate-500 mr-2.5 shrink-0" />
         <input
           type="text"
           value={filtroTexto}
-          onChange={(e) => setFiltroTexto(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFiltroTexto(e.target.value)}
           placeholder="Buscar por remito, origen, destino u operador..."
           className="bg-transparent border-none text-sm text-white placeholder-slate-500 focus:outline-none w-full"
         />
         {filtroTexto && (
           <button
+            type="button"
             onClick={() => setFiltroTexto('')}
             className="text-xs text-slate-400 hover:text-white ml-2"
           >
@@ -89,7 +92,6 @@ export const RemitosPage: React.FC = () => {
         )}
       </div>
 
-      {/* Grilla Consolidada */}
       <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-xl">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm text-slate-300">
@@ -120,7 +122,7 @@ export const RemitosPage: React.FC = () => {
                   </td>
                 </tr>
               ) : (
-                remitosFiltrados.map((remito) => (
+                remitosFiltrados.map((remito: RemitoConsolidado) => (
                   <tr
                     key={remito.nro}
                     className={`hover:bg-slate-800/40 transition-colors ${
@@ -184,6 +186,7 @@ export const RemitosPage: React.FC = () => {
 
                     <td className="py-3.5 px-4 text-right">
                       <button
+                        type="button"
                         onClick={() => navigate(`/remitos/${remito.nro}`)}
                         className="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white text-xs font-medium rounded-md border border-slate-700 transition-all"
                       >

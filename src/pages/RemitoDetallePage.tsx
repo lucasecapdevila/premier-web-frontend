@@ -15,17 +15,20 @@ import {
   RefreshCw
 } from 'lucide-react';
 import { api } from '../lib/api';
-import type { RemitoDetalleResponse } from '../types';
+import { ModalReemplazarUnidad } from '../components/ModalReemplazarUnidad';
+import type { RemitoDetalleResponse, UnidadDetalle } from '../types';
 
 export const RemitoDetallePage: React.FC = () => {
   const { numero } = useParams<{ numero: string }>();
   const navigate = useNavigate();
 
   const [data, setData] = useState<RemitoDetalleResponse | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [modalAnulacion, setModalAnulacion] = useState(false);
-  const [motivoAnula, setMotivoAnula] = useState('');
-  const [procesandoAnula, setProcesandoAnula] = useState(false);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [modalAnulacion, setModalAnulacion] = useState<boolean>(false);
+  const [motivoAnula, setMotivoAnula] = useState<string>('');
+  const [procesandoAnula, setProcesandoAnula] = useState<boolean>(false);
+
+  const [unidadParaReemplazo, setUnidadParaReemplazo] = useState<UnidadDetalle | null>(null);
 
   const refrescarDatos = async (): Promise<void> => {
     if (!numero) return;
@@ -152,17 +155,6 @@ export const RemitoDetallePage: React.FC = () => {
             >
               <Ban size={16} />
               <span>Anular Remito</span>
-            </button>
-          )}
-
-          {!remito.es_anulado && !esCompra && remito.en_ventana_24h && (
-            <button
-              type="button"
-              onClick={() => toast('Selector de reemplazo en modal en curso', { icon: 'ℹ️' })}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-sm font-medium transition-colors shadow-lg shadow-blue-600/20"
-            >
-              <RefreshCw size={16} />
-              <span>Reemplazar Unidad</span>
             </button>
           )}
         </div>
@@ -293,7 +285,7 @@ export const RemitoDetallePage: React.FC = () => {
               <th className="py-3 px-4">Chasis</th>
               <th className="py-3 px-4">Color</th>
               <th className="py-3 px-4">Artículo</th>
-              <th className="py-3 px-4 text-right">Estado Mov.</th>
+              <th className="py-3 px-4 text-right">Acción</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-800/60">
@@ -311,9 +303,21 @@ export const RemitoDetallePage: React.FC = () => {
                   {u.descripcion} <span className="font-mono">({u.codart})</span>
                 </td>
                 <td className="py-3 px-4 text-right">
-                  <span className="text-xs font-semibold text-emerald-400">
-                    Registrado
-                  </span>
+                  {!remito.es_anulado && !esCompra && remito.en_ventana_24h ? (
+                    <button
+                      type="button"
+                      onClick={() => setUnidadParaReemplazo(u)}
+                      className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-blue-400 hover:text-blue-300 rounded text-xs font-medium border border-slate-700 transition-colors"
+                      title="Reemplazar esta unidad en el traslado"
+                    >
+                      <RefreshCw size={12} />
+                      <span>Reemplazar</span>
+                    </button>
+                  ) : (
+                    <span className="text-xs font-semibold text-emerald-400">
+                      Registrado
+                    </span>
+                  )}
                 </td>
               </tr>
             ))}
@@ -367,6 +371,17 @@ export const RemitoDetallePage: React.FC = () => {
             </form>
           </div>
         </div>
+      )}
+
+      {unidadParaReemplazo && (
+        <ModalReemplazarUnidad
+          nroRemito={remito.nro}
+          origenNombre={remito.de_nombre}
+          destinoNombre={remito.a_nombre}
+          unidadSaliente={unidadParaReemplazo}
+          onClose={() => setUnidadParaReemplazo(null)}
+          onSuccess={refrescarDatos}
+        />
       )}
     </div>
   );

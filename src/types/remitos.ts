@@ -77,3 +77,24 @@ export interface PayloadReemplazarUnidad {
   unicode_entrante: number;
   motivo: string;
 }
+
+export interface UnidadDisponibleReemplazo {
+  id: number;
+  unicode: number;
+  motor: string;
+  chasis: string;
+  color_codigo: string;
+  color_nombre: string;
+  codart: number;
+}
+
+export interface RespuestaReemplazoUnidad {
+  success: boolean;
+  remito: number;
+  articulo: number;
+  reemplazo: {
+    saliente: number;
+    entrante: number;
+  };
+  motivo: string;
+}

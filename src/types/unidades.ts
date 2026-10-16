@@ -9,6 +9,16 @@ export interface UnidadStock {
   jlv_codigomoto: string;
 }
 
+export interface UnidadDisponibleStock {
+  id: number;
+  unicode: number;
+  motor: string;
+  chasis: string;
+  color_codigo: string;
+  color_nombre: string;
+  codart: number;
+}
+
 export interface UnidadDetalle {
   id: number;
   unicode: number;

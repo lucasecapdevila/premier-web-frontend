@@ -5,7 +5,8 @@ import { useAuthStore } from './stores/useAuthStore';
 import { LoginPage } from './pages/LoginPage';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { MainLayout } from './layouts/MainLayout';
-import RemitosPage from './pages/RemitosPage';
+import { RemitosPage } from './pages/RemitosPage';
+import RemitoDetallePage from './pages/RemitoDetallePage';
 
 export const App: React.FC = () => {
   const cargarSesion = useAuthStore((state) => state.cargarSesion);
@@ -53,6 +54,7 @@ export const App: React.FC = () => {
         >
           <Route path="/" element={<Navigate to="/remitos" replace />} />
           <Route path="/remitos" element={<RemitosPage />} />
+          <Route path="/remitos/:numero" element={<RemitoDetallePage />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />

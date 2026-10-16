@@ -20,7 +20,7 @@ export const RemitosPage: React.FC = () => {
 
   useEffect(() => {
     cargarRemitos().catch((error) => {
-      toast.error(error.response?.data?.message || 'Error al obtener remitos');
+      toast.error((error as { response?: { data?: { message?: string } } }).response?.data?.message || 'Error al obtener remitos');
     });
   }, [cargarRemitos]);
 
@@ -110,7 +110,7 @@ export const RemitosPage: React.FC = () => {
                 <tr>
                   <td colSpan={8} className="py-12 text-center text-slate-400">
                     <RotateCcw className="animate-spin inline-block mr-2" size={18} />
-                    loading remitos...
+                    Cargando remitos...
                   </td>
                 </tr>
               ) : remitosFiltrados.length === 0 ? (

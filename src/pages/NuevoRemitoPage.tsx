@@ -11,74 +11,13 @@ import {
   Info
 } from 'lucide-react';
 import { api } from '../lib/api';
-
-interface SucursalOpcion {
-  id: number;
-  nombre: string;
-}
-
-interface ColorOpcion {
-  codigo: string;
-  nombre: string;
-}
-
-interface UnidadFormulario {
-  motor: string;
-  chasis: string;
-  color: string;
-}
-
-interface PayloadUnidad {
-  motor?: string;
-  chasis?: string;
-  color: string;
-}
-
-interface PayloadArticulo {
-  codart: number;
-  observa: string;
-  unidades: PayloadUnidad[];
-}
-
-interface PayloadRemito {
-  origen: number;
-  destino: number;
-  items: PayloadArticulo[];
-}
-
-interface RespuestaCrearRemito {
-  success: boolean;
-  remito: number;
-  origen: number;
-  destino: number;
-  tipo: 'COMPRA' | 'TRASLADO';
-}
-
-const SUCURSALES: readonly SucursalOpcion[] = [
-  { id: 90, nombre: 'Compras' },
-  { id: 1, nombre: 'Casa Central' },
-  { id: 2, nombre: 'Sucursal Alberdi' },
-  { id: 3, nombre: 'Sucursal Concepción' },
-  { id: 4, nombre: 'Sucursal Tafi' },
-  { id: 5, nombre: 'Sucursal La Cocha' },
-  { id: 6, nombre: 'Sucursal Monteros' },
-  { id: 7, nombre: 'Sucursal Logar' },
-];
-
-const COLORES: readonly ColorOpcion[] = [
-  { codigo: 'NGRO', nombre: 'Negro' },
-  { codigo: 'BLCO', nombre: 'Blanco' },
-  { codigo: 'ROJO', nombre: 'Rojo' },
-  { codigo: 'AZUL', nombre: 'Azul' },
-  { codigo: 'GRIS', nombre: 'Gris' },
-  { codigo: 'PLTA', nombre: 'Plateado' },
-  { codigo: 'AMAR', nombre: 'Amarillo' },
-  { codigo: 'VERD', nombre: 'Verde' },
-  { codigo: 'NRJA', nombre: 'Naranja' },
-  { codigo: 'AZ-N', nombre: 'Azul y Negro' },
-  { codigo: 'RO-N', nombre: 'Rojo y Negro' },
-  { codigo: 'BL-N', nombre: 'Blanco y Negro' },
-];
+import { SUCURSALES_OPCIONES, COLORES_OPCIONES } from '../lib/catalogos';
+import type { 
+  UnidadFormulario, 
+  PayloadRemito, 
+  PayloadUnidad, 
+  RespuestaCrearRemito 
+} from '../types';
 
 export const NuevoRemitoPage: React.FC = () => {
   const navigate = useNavigate();
@@ -213,7 +152,7 @@ export const NuevoRemitoPage: React.FC = () => {
               disabled={loading}
               className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              {SUCURSALES.map((s) => (
+              {SUCURSALES_OPCIONES.map((s) => (
                 <option key={s.id} value={s.id}>
                   {s.nombre} ({s.id})
                 </option>
@@ -231,7 +170,7 @@ export const NuevoRemitoPage: React.FC = () => {
               disabled={loading || origen === 90}
               className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
             >
-              {SUCURSALES.filter((s) => s.id !== 90).map((s) => (
+              {SUCURSALES_OPCIONES.filter((s) => s.id !== 90).map((s) => (
                 <option key={s.id} value={s.id}>
                   {s.nombre} ({s.id})
                 </option>
@@ -359,7 +298,7 @@ export const NuevoRemitoPage: React.FC = () => {
                     disabled={loading}
                     className="w-full bg-slate-900 border border-slate-800 rounded p-2 text-xs text-white focus:outline-none focus:ring-1 focus:ring-blue-500"
                   >
-                    {COLORES.map((c) => (
+                    {COLORES_OPCIONES.map((c) => (
                       <option key={c.codigo} value={c.codigo}>
                         {c.nombre}
                       </option>

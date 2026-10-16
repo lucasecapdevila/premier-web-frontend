@@ -1,24 +1,6 @@
 import { create } from 'zustand';
 import { api } from '../lib/api';
-
-export interface RemitoConsolidado {
-  nro: number;
-  de: number;
-  de_nombre: string;
-  a: number;
-  a_nombre: string;
-  fecha: string;
-  fecha_dt: string;
-  operador: string;
-  estado: number;
-  id_borrado: string;
-  motivo_anula: string;
-  motivo_edic: string;
-  total_articulos: number;
-  total_unidades: number;
-  en_ventana_24h: boolean;
-  es_anulado: boolean;
-}
+import type { RemitoConsolidado } from '../types';
 
 interface RemitosState {
   remitos: RemitoConsolidado[];
@@ -39,7 +21,7 @@ export const useRemitosStore = create<RemitosState>((set) => ({
   limite: 25,
   filtroTexto: '',
 
-  cargarRemitos: async (page = 1, limit = 25) => {
+  cargarRemitos: async (page = 1, limit = 25): Promise<void> => {
     set({ loading: true, pagina: page, limite: limit });
     try {
       const { data } = await api.get<RemitoConsolidado[]>('/remitos', {
@@ -52,5 +34,5 @@ export const useRemitosStore = create<RemitosState>((set) => ({
     }
   },
 
-  setFiltroTexto: (texto: string) => set({ filtroTexto: texto }),
+  setFiltroTexto: (texto: string): void => set({ filtroTexto: texto }),
 }));

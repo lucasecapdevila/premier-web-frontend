@@ -39,7 +39,7 @@ export const LoginPage: React.FC = () => {
     <div className="min-h-screen bg-canvas flex items-center justify-center p-4 font-sans">
       <div className="w-full max-w-md bg-white border border-stroke rounded-xl shadow-sm p-8">
         <div className="text-center mb-7">
-          <img src="/public/logoBroal.png" alt="Logo" className="mx-auto mb-3" />
+          <img src="/public/logoBroalLayout.png" alt="Logo" className="mx-auto mb-3 h-16 w-auto" />
           <h1 className="text-2xl font-bold text-content-primary tracking-tight">Premier Web</h1>
           <p className="text-content-secondary text-xs mt-1">Gestión Centralizada de Remitos y Unidades</p>
         </div>

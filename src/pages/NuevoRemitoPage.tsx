@@ -7,7 +7,6 @@ import {
   Trash2, 
   Save, 
   RotateCcw,
-  PackagePlus,
   Info,
   Layers
 } from 'lucide-react';

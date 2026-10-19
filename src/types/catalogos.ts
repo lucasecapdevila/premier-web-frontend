@@ -7,3 +7,10 @@ export interface ColorCatalogo {
   codigo: string;
   nombre: string;
 }
+
+export interface ArticuloCatalogo {
+  codart: number;
+  descripcion: string;
+  rubro: number;
+  precio: number;
+}

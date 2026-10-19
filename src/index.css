@@ -3,11 +3,51 @@
 @theme {
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
   --font-mono: 'IBM Plex Mono', monospace;
+
+  /* Superficies y Fondos */
+  --color-canvas: #F1F1F1;
+  --color-surface: #FFFFFF;
+  --color-surface-secondary: #EAEAEA;
+  --color-surface-hover: #F7F7F7;
+
+  /* Contenido y Tipografía */
+  --color-content-primary: #1A1A1A;
+  --color-content-secondary: #666666;
+  --color-content-disabled: #999999;
+
+  /* Bordes */
+  --color-stroke: #D9D9D9;
+  --color-stroke-strong: #BFBFBF;
+
+  /* Identidad Corporativa */
+  --color-brand: #FF0000;
+  --color-brand-hover: #D90000;
+  --color-brand-pressed: #B80000;
+  --color-brand-light: #FF6666;
+  --color-brand-soft: #FEE2E2;
+  --color-brand-dark: #991B1B;
+
+  /* Semántica */
+  --color-success: #15803D;
+  --color-success-soft: #DCFCE7;
+  --color-success-dark: #166534;
+
+  --color-error: #DC2626;
+  --color-error-soft: #FEE2E2;
+  --color-error-dark: #991B1B;
+
+  --color-warning: #D97706;
+  --color-warning-soft: #FEF3C7;
+  --color-warning-dark: #92400E;
+
+  --color-info: #2563EB;
+  --color-info-soft: #DBEAFE;
+  --color-info-dark: #1E40AF;
 }
 
 body {
-  background-color: #F1F1F1;
-  color: #1A1A1A;
+  background-color: var(--color-canvas);
+  color: var(--color-content-primary);
   font-family: var(--font-sans);
   margin: 0;
   -webkit-font-smoothing: antialiased;

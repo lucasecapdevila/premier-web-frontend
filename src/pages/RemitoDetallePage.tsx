@@ -27,7 +27,6 @@ export const RemitoDetallePage: React.FC = () => {
   const [modalAnulacion, setModalAnulacion] = useState<boolean>(false);
   const [motivoAnula, setMotivoAnula] = useState<string>('');
   const [procesandoAnula, setProcesandoAnula] = useState<boolean>(false);
-
   const [unidadParaReemplazo, setUnidadParaReemplazo] = useState<UnidadDetalle | null>(null);
 
   const refrescarDatos = async (): Promise<void> => {
@@ -99,9 +98,9 @@ export const RemitoDetallePage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[50vh] text-slate-400">
-        <RotateCcw className="animate-spin mb-3 text-blue-500" size={32} />
-        <p className="text-sm font-medium">Cargando trazabilidad del remito...</p>
+      <div className="flex flex-col items-center justify-center min-h-[50vh] text-content-secondary">
+        <RotateCcw className="animate-spin mb-2 text-brand-hover" size={26} />
+        <p className="text-xs">Cargando trazabilidad del remito...</p>
       </div>
     );
   }
@@ -112,48 +111,48 @@ export const RemitoDetallePage: React.FC = () => {
   const esCompra = remito.de === 90;
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-5">
+    <div className="space-y-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-stroke pb-4">
         <div className="flex items-center gap-3">
           <button
             type="button"
             onClick={() => navigate('/remitos')}
-            className="p-2 bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white rounded-lg border border-slate-800 transition-colors"
-            title="Volver al listado"
+            className="p-1.5 bg-white hover:bg-surface-secondary text-content-secondary hover:text-content-primary rounded-md border border-stroke transition-colors duration-150"
+            title="Volver"
           >
-            <ArrowLeft size={18} />
+            <ArrowLeft size={16} />
           </button>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-2xl font-bold text-white tracking-tight font-mono">
+              <h1 className="text-2xl font-bold text-content-primary tracking-tight font-mono">
                 Remito #{remito.nro}
               </h1>
               {remito.es_anulado ? (
-                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-900/40 text-red-400 border border-red-800/60">
-                  <Ban size={12} />
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold bg-[#FEE2E2] text-[#991B1B] border border-error/20">
+                  <Ban size={11} />
                   Anulado
                 </span>
               ) : (
-                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-900/30 text-emerald-400 border border-emerald-800/60">
-                  <CheckCircle2 size={12} />
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold bg-success-soft text-success-dark border border-success/20">
+                  <CheckCircle2 size={11} />
                   Activo
                 </span>
               )}
             </div>
-            <p className="text-xs text-slate-400 mt-0.5">
-              Tipo de movimiento: <strong className="text-slate-200">{esCompra ? 'Compra (Alta)' : 'Traslado entre sucursales'}</strong>
+            <p className="text-xs text-content-secondary mt-0.5">
+              Tipo: <strong className="text-content-primary">{esCompra ? 'Compra (Alta Directa)' : 'Traslado entre Sucursales'}</strong>
             </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           {!remito.es_anulado && remito.en_ventana_24h && (
             <button
               type="button"
               onClick={() => setModalAnulacion(true)}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-red-600/20 hover:bg-red-600/30 text-red-400 border border-red-800/60 rounded-lg text-sm font-medium transition-colors"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#FEE2E2] hover:bg-error text-[#991B1B] hover:text-white border border-error/30 rounded-md text-xs font-semibold transition-colors duration-150"
             >
-              <Ban size={16} />
+              <Ban size={14} />
               <span>Anular Remito</span>
             </button>
           )}
@@ -161,160 +160,160 @@ export const RemitoDetallePage: React.FC = () => {
       </div>
 
       {remito.es_anulado && (
-        <div className="p-4 bg-red-950/30 border border-red-800/50 rounded-xl flex items-start gap-3 text-red-300 text-sm">
-          <AlertTriangle className="shrink-0 text-red-400 mt-0.5" size={18} />
+        <div className="p-3.5 bg-[#FEE2E2] border border-error/30 rounded-lg flex items-start gap-2.5 text-[#991B1B] text-xs">
+          <AlertTriangle className="shrink-0 mt-0.5" size={16} />
           <div>
-            <strong className="font-semibold block text-red-200">Remito Anulado:</strong>
+            <strong className="font-semibold block">Motivo de Anulación:</strong>
             {remito.motivo_anula || 'Sin motivo especificado.'}
           </div>
         </div>
       )}
 
       {remito.motivo_edic && (
-        <div className="p-4 bg-amber-950/20 border border-amber-800/40 rounded-xl flex items-start gap-3 text-amber-300 text-sm">
-          <Clock className="shrink-0 text-amber-400 mt-0.5" size={18} />
+        <div className="p-3.5 bg-warning-soft border border-warning/30 rounded-lg flex items-start gap-2.5 text-warning-dark text-xs">
+          <Clock className="shrink-0 mt-0.5" size={16} />
           <div>
-            <strong className="font-semibold block text-amber-200">Modificación Registrada:</strong>
+            <strong className="font-semibold block">Modificación Registrada:</strong>
             {remito.motivo_edic}
           </div>
         </div>
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
-          <div className="text-xs uppercase text-slate-500 font-semibold tracking-wider flex items-center gap-1.5 mb-2">
-            <ArrowRight size={14} className="text-blue-500" />
+        <div className="bg-white border border-stroke rounded-lg p-3.5 shadow-sm">
+          <div className="text-[11px] uppercase text-content-secondary font-semibold tracking-wider flex items-center gap-1.5 mb-1.5">
+            <ArrowRight size={13} className="text-brand-hover" />
             Recorrido Físico
           </div>
-          <div className="space-y-1">
-            <div className="text-sm">
-              <span className="text-slate-400">De:</span>{' '}
-              <span className="font-semibold text-white">{remito.de_nombre}</span>{' '}
-              <span className="text-xs text-slate-500 font-mono">({remito.de})</span>
+          <div className="space-y-0.5 text-xs">
+            <div>
+              <span className="text-content-secondary">De:</span>{' '}
+              <span className="font-semibold text-content-primary">{remito.de_nombre}</span>{' '}
+              <span className="text-content-secondary font-mono text-[11px]">({remito.de})</span>
             </div>
-            <div className="text-sm">
-              <span className="text-slate-400">A:</span>{' '}
-              <span className="font-semibold text-white">{remito.a_nombre}</span>{' '}
-              <span className="text-xs text-slate-500 font-mono">({remito.a})</span>
+            <div>
+              <span className="text-content-secondary">A:</span>{' '}
+              <span className="font-semibold text-content-primary">{remito.a_nombre}</span>{' '}
+              <span className="text-content-secondary font-mono text-[11px]">({remito.a})</span>
             </div>
           </div>
         </div>
 
-        <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
-          <div className="text-xs uppercase text-slate-500 font-semibold tracking-wider flex items-center gap-1.5 mb-2">
-            <Calendar size={14} className="text-blue-500" />
+        <div className="bg-white border border-stroke rounded-lg p-3.5 shadow-sm">
+          <div className="text-[11px] uppercase text-content-secondary font-semibold tracking-wider flex items-center gap-1.5 mb-1.5">
+            <Calendar size={13} className="text-brand-hover" />
             Fecha y Plazo
           </div>
-          <div className="space-y-1">
-            <div className="text-sm font-medium text-white">
+          <div className="space-y-0.5 text-xs">
+            <div className="font-semibold text-content-primary">
               {remito.fecha.replace(/(\d{4})(\d{2})(\d{2})/, '$3/$2/$1')}
             </div>
-            <div className="text-xs text-slate-400">
+            <div>
               {remito.en_ventana_24h ? (
-                <span className="text-amber-400 flex items-center gap-1">
-                  <Clock size={12} /> Dentro de la ventana de 24 horas
+                <span className="text-warning font-medium flex items-center gap-1 text-[11px]">
+                  <Clock size={11} /> Dentro de la ventana de 24 horas
                 </span>
               ) : (
-                <span className="text-slate-500">Ventana de edición cerrada</span>
+                <span className="text-content-secondary text-[11px]">Ventana de edición cerrada</span>
               )}
             </div>
           </div>
         </div>
 
-        <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
-          <div className="text-xs uppercase text-slate-500 font-semibold tracking-wider flex items-center gap-1.5 mb-2">
-            <User size={14} className="text-blue-500" />
+        <div className="bg-white border border-stroke rounded-lg p-3.5 shadow-sm">
+          <div className="text-[11px] uppercase text-content-secondary font-semibold tracking-wider flex items-center gap-1.5 mb-1.5">
+            <User size={13} className="text-brand-hover" />
             Auditoría
           </div>
-          <div className="space-y-1">
-            <div className="text-sm">
-              <span className="text-slate-400">Operador:</span>{' '}
-              <span className="font-mono font-medium text-white">{remito.operador}</span>
+          <div className="space-y-0.5 text-xs">
+            <div>
+              <span className="text-content-secondary">Operador:</span>{' '}
+              <span className="font-mono font-medium text-content-primary">{remito.operador}</span>
             </div>
-            <div className="text-xs text-slate-400">
-              Total Unidades: <span className="font-semibold text-white">{data.total_unidades}</span>
+            <div className="text-content-secondary">
+              Total Unidades: <span className="font-semibold text-content-primary font-mono">{data.total_unidades}</span>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
-        <div className="px-4 py-3 bg-slate-800/50 border-b border-slate-800 flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-white flex items-center gap-2">
-            <FileText size={16} className="text-blue-400" />
+      <div className="bg-white border border-stroke rounded-lg overflow-hidden shadow-sm">
+        <div className="px-4 py-2.5 bg-surface-secondary border-b border-stroke">
+          <h2 className="text-xs font-semibold text-content-primary uppercase tracking-wider flex items-center gap-1.5">
+            <FileText size={14} className="text-brand-hover" />
             Artículos Declarados en Remito
           </h2>
         </div>
-        <table className="w-full text-left text-sm text-slate-300">
-          <thead className="bg-slate-800/30 text-xs uppercase text-slate-400 border-b border-slate-800 font-semibold">
+        <table className="w-full text-left text-xs text-content-primary">
+          <thead className="bg-surface-hover border-b border-stroke text-[11px] uppercase text-content-secondary font-semibold">
             <tr>
-              <th className="py-3 px-4">Cód. Artículo</th>
-              <th className="py-3 px-4">Descripción</th>
-              <th className="py-3 px-4 text-center">Cantidad</th>
-              <th className="py-3 px-4">Observación</th>
+              <th className="py-2.5 px-4">Cód. Artículo</th>
+              <th className="py-2.5 px-4">Descripción</th>
+              <th className="py-2.5 px-4 text-center">Cantidad</th>
+              <th className="py-2.5 px-4">Observación</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-800/60">
+          <tbody className="divide-y divide-stroke">
             {articulos.map((art) => (
               <tr key={art.codart}>
-                <td className="py-3 px-4 font-mono font-bold text-white">{art.codart}</td>
-                <td className="py-3 px-4 text-slate-200">{art.descripcion || 'Sin descripción'}</td>
-                <td className="py-3 px-4 text-center font-semibold text-white">{art.cantidad}</td>
-                <td className="py-3 px-4 text-xs text-slate-400">{art.observa || '-'}</td>
+                <td className="py-2.5 px-4 font-mono font-bold text-content-primary">{art.codart}</td>
+                <td className="py-2.5 px-4">{art.descripcion || 'Sin descripción'}</td>
+                <td className="py-2.5 px-4 text-center font-mono font-semibold">{art.cantidad}</td>
+                <td className="py-2.5 px-4 text-content-secondary text-[11px]">{art.observa || '-'}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
 
-      <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-xl">
-        <div className="px-4 py-3 bg-slate-800/50 border-b border-slate-800 flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-white flex items-center gap-2">
-            <CheckCircle2 size={16} className="text-emerald-400" />
+      <div className="bg-white border border-stroke rounded-lg overflow-hidden shadow-sm">
+        <div className="px-4 py-2.5 bg-surface-secondary border-b border-stroke flex items-center justify-between">
+          <h2 className="text-xs font-semibold text-content-primary uppercase tracking-wider flex items-center gap-1.5">
+            <CheckCircle2 size={14} className="text-success" />
             Trazabilidad de Unidades Físicas (Padrón)
           </h2>
-          <span className="text-xs text-slate-400">
-            Reconstruido desde <code className="text-blue-400">jlv_motomov</code>
+          <span className="text-[11px] font-mono text-content-secondary">
+            Fuente: jlv_motomov
           </span>
         </div>
-        <table className="w-full text-left text-sm text-slate-300">
-          <thead className="bg-slate-800/30 text-xs uppercase text-slate-400 border-b border-slate-800 font-semibold">
+        <table className="w-full text-left text-xs text-content-primary">
+          <thead className="bg-surface-hover border-b border-stroke text-[11px] uppercase text-content-secondary font-semibold">
             <tr>
-              <th className="py-3 px-4">Unicode</th>
-              <th className="py-3 px-4">Motor</th>
-              <th className="py-3 px-4">Chasis</th>
-              <th className="py-3 px-4">Color</th>
-              <th className="py-3 px-4">Artículo</th>
-              <th className="py-3 px-4 text-right">Acción</th>
+              <th className="py-2.5 px-4">Unicode</th>
+              <th className="py-2.5 px-4">Motor</th>
+              <th className="py-2.5 px-4">Chasis</th>
+              <th className="py-2.5 px-4">Color</th>
+              <th className="py-2.5 px-4">Artículo</th>
+              <th className="py-2.5 px-4 text-right">Acción</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-800/60">
+          <tbody className="divide-y divide-stroke">
             {unidades.map((u) => (
-              <tr key={u.id} className="hover:bg-slate-800/30 transition-colors">
-                <td className="py-3 px-4 font-mono font-bold text-blue-400">#{u.unicode}</td>
-                <td className="py-3 px-4 font-mono text-xs text-slate-200">{u.motor}</td>
-                <td className="py-3 px-4 font-mono text-xs text-slate-200">{u.chasis}</td>
-                <td className="py-3 px-4">
-                  <span className="inline-flex items-center px-2 py-0.5 rounded text-xs bg-slate-800 border border-slate-700 text-slate-200">
+              <tr key={u.id} className="hover:bg-surface-hover transition-colors duration-150">
+                <td className="py-2.5 px-4 font-mono font-bold text-content-primary">#{u.unicode}</td>
+                <td className="py-2.5 px-4 font-mono text-[11px] text-content-primary">{u.motor}</td>
+                <td className="py-2.5 px-4 font-mono text-[11px] text-content-primary">{u.chasis}</td>
+                <td className="py-2.5 px-4">
+                  <span className="inline-block px-1.5 py-0.5 rounded text-[11px] bg-surface-secondary border border-stroke text-content-primary">
                     {u.color_nombre}
                   </span>
                 </td>
-                <td className="py-3 px-4 text-xs text-slate-400">
-                  {u.descripcion} <span className="font-mono">({u.codart})</span>
+                <td className="py-2.5 px-4 text-content-secondary">
+                  {u.descripcion} <span className="font-mono text-[11px]">({u.codart})</span>
                 </td>
-                <td className="py-3 px-4 text-right">
+                <td className="py-2.5 px-4 text-right">
                   {!remito.es_anulado && !esCompra && remito.en_ventana_24h ? (
                     <button
                       type="button"
                       onClick={() => setUnidadParaReemplazo(u)}
-                      className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-blue-400 hover:text-blue-300 rounded text-xs font-medium border border-slate-700 transition-colors"
-                      title="Reemplazar esta unidad en el traslado"
+                      className="inline-flex items-center gap-1 px-2 py-1 bg-white hover:bg-surface-secondary text-content-primary rounded text-[11px] font-semibold border border-stroke transition-colors duration-150"
+                      title="Reemplazar unidad en remito"
                     >
-                      <RefreshCw size={12} />
+                      <RefreshCw size={11} className="text-brand-hover" />
                       <span>Reemplazar</span>
                     </button>
                   ) : (
-                    <span className="text-xs font-semibold text-emerald-400">
+                    <span className="text-[11px] font-semibold text-success">
                       Registrado
                     </span>
                   )}
@@ -326,19 +325,19 @@ export const RemitoDetallePage: React.FC = () => {
       </div>
 
       {modalAnulacion && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-slate-900 border border-slate-800 rounded-xl max-w-md w-full p-6 shadow-2xl">
-            <h3 className="text-lg font-bold text-white flex items-center gap-2 mb-2">
-              <AlertTriangle className="text-red-500" size={20} />
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-white border border-stroke rounded-xl max-w-md w-full p-6 shadow-xl">
+            <h3 className="text-base font-bold text-content-primary flex items-center gap-2 mb-2">
+              <AlertTriangle className="text-error" size={18} />
               Confirmar Anulación del Remito #{remito.nro}
             </h3>
-            <p className="text-xs text-slate-400 mb-4">
-              Esta acción revertirá las ubicaciones de stock o dará la baja lógica correspondiente según el origen del movimiento.
+            <p className="text-xs text-content-secondary mb-4">
+              Esta acción revertirá las ubicaciones de stock o aplicará la baja lógica correspondiente según el origen del movimiento.
             </p>
 
             <form onSubmit={(e) => void handleAnular(e.nativeEvent)} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 uppercase mb-1.5">
+                <label className="block text-xs font-semibold text-content-primary uppercase mb-1.5">
                   Motivo de Anulación (* Obligatorio)
                 </label>
                 <textarea
@@ -346,24 +345,24 @@ export const RemitoDetallePage: React.FC = () => {
                   rows={3}
                   value={motivoAnula}
                   onChange={(e) => setMotivoAnula(e.target.value)}
-                  placeholder="Ej: Error administrativo en número de unidades cargadas..."
-                  className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-red-500 resize-none"
+                  placeholder="Detalle el motivo de la anulación..."
+                  className="w-full bg-white border border-stroke rounded-md p-2.5 text-xs text-content-primary placeholder-content-disabled focus:outline-none focus:border-brand-hover focus:ring-1 focus:ring-brand-light resize-none"
                 />
               </div>
 
-              <div className="flex items-center justify-end gap-3 pt-2">
+              <div className="flex items-center justify-end gap-2 pt-2">
                 <button
                   type="button"
                   disabled={procesandoAnula}
                   onClick={() => setModalAnulacion(false)}
-                  className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-sm transition-colors"
+                  className="px-3.5 py-2 bg-surface-secondary hover:bg-stroke text-content-primary rounded-md text-xs font-medium transition-colors duration-150"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
                   disabled={procesandoAnula}
-                  className="px-4 py-2 bg-red-600 hover:bg-red-500 text-white rounded-lg text-sm font-medium transition-colors shadow-lg shadow-red-600/30 disabled:opacity-50"
+                  className="px-3.5 py-2 bg-brand-hover hover:bg-brand-pressed text-white rounded-md text-xs font-semibold transition-colors duration-150 shadow-sm disabled:opacity-50"
                 >
                   {procesandoAnula ? 'Anulando...' : 'Confirmar Anulación'}
                 </button>

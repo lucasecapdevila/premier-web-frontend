@@ -22,8 +22,8 @@ import type {
 } from '../types';
 
 interface FilaUnidad {
-  id?: number; // Presente en traslados
-  unicode?: number; // Presente en traslados
+  id?: number;
+  unicode?: number;
   motor: string;
   chasis: string;
   color: string;
@@ -47,7 +47,7 @@ export const NuevoRemitoPage: React.FC = () => {
 
   const handleOrigenChange = (nuevoOrigen: number): void => {
     setOrigen(nuevoOrigen);
-    setUnidades([]); // Limpiar grilla al cambiar sucursal de origen
+    setUnidades([]);
     if (nuevoOrigen === 90) {
       setDestino(1);
       setUnidades([{ motor: '', chasis: '', color: 'NGRO' }]);
@@ -129,7 +129,6 @@ export const NuevoRemitoPage: React.FC = () => {
                   color: u.color,
                 };
               }
-              // Traslado: obligatorio enviar id de detmotos
               return {
                 id: u.id,
                 color: u.color,
@@ -151,40 +150,39 @@ export const NuevoRemitoPage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto">
-      <div className="flex items-center justify-between border-b border-slate-800 pb-5">
+    <div className="space-y-5 max-w-4xl mx-auto">
+      <div className="flex items-center justify-between border-b border-stroke pb-4">
         <div className="flex items-center gap-3">
           <button
             type="button"
             onClick={() => navigate('/remitos')}
-            className="p-2 bg-slate-900 hover:bg-slate-800 hover:text-white rounded-lg border border-slate-800 transition-colors"
+            className="p-1.5 bg-white hover:bg-surface-secondary text-content-secondary hover:text-content-primary rounded-md border border-stroke transition-colors duration-150"
           >
-            <ArrowLeft size={18} />
+            <ArrowLeft size={16} />
           </button>
           <div>
-            <h1 className="text-2xl font-bold text-white tracking-tight flex items-center gap-2">
-              <PackagePlus className="text-blue-500" size={24} />
+            <h1 className="text-2xl font-bold text-content-primary tracking-tight flex items-center gap-2">
+              <PackagePlus className="text-brand-hover" size={22} />
               Generación de Remito
             </h1>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <p className="text-xs text-content-secondary mt-0.5">
               {esCompra ? 'Alta directa desde proveedor (Compra)' : 'Movimiento de inventario entre sucursales'}
             </p>
           </div>
         </div>
       </div>
 
-      <form onSubmit={(e) => void handleSubmit(e.nativeEvent)} className="space-y-6">
-        {/* Origen y Destino */}
-        <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 grid grid-cols-1 md:grid-cols-2 gap-4">
+      <form onSubmit={(e) => void handleSubmit(e.nativeEvent)} className="space-y-5">
+        <div className="bg-white border border-stroke rounded-lg p-4 grid grid-cols-1 md:grid-cols-2 gap-4 shadow-sm">
           <div>
-            <label className="block text-xs font-semibold text-slate-300 uppercase mb-2">
+            <label className="block text-xs font-semibold text-content-primary uppercase mb-1.5">
               Origen (* De)
             </label>
             <select
               value={origen}
               onChange={(e) => handleOrigenChange(Number(e.target.value))}
               disabled={loading}
-              className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full bg-white border border-stroke rounded-md p-2 text-xs text-content-primary focus:outline-none focus:border-brand-hover focus:ring-1 focus:ring-brand-light"
             >
               {SUCURSALES_OPCIONES.map((s) => (
                 <option key={s.id} value={s.id}>
@@ -195,14 +193,14 @@ export const NuevoRemitoPage: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-300 uppercase mb-2">
+            <label className="block text-xs font-semibold text-content-primary uppercase mb-1.5">
               Destino (* A)
             </label>
             <select
               value={destino}
               onChange={(e) => setDestino(Number(e.target.value))}
               disabled={loading || esCompra}
-              className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+              className="w-full bg-white border border-stroke rounded-md p-2 text-xs text-content-primary focus:outline-none focus:border-brand-hover focus:ring-1 focus:ring-brand-light disabled:bg-surface-secondary disabled:text-content-disabled"
             >
               {SUCURSALES_OPCIONES.filter((s) => s.id !== 90).map((s) => (
                 <option key={s.id} value={s.id}>
@@ -211,22 +209,21 @@ export const NuevoRemitoPage: React.FC = () => {
               ))}
             </select>
             {esCompra && (
-              <p className="text-[11px] text-slate-500 mt-1 flex items-center gap-1">
-                <Info size={12} /> Para compras, el destino debe ser Casa Central (1)[cite: 160].
+              <p className="text-[11px] text-content-secondary mt-1 flex items-center gap-1">
+                <Info size={11} className="text-warning" /> Para compras, el destino debe ser Casa Central (1).
               </p>
             )}
           </div>
         </div>
 
-        {/* Parámetros de Artículo */}
-        <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
-          <h2 className="text-sm font-semibold text-white uppercase tracking-wider">
+        <div className="bg-white border border-stroke rounded-lg p-4 space-y-3 shadow-sm">
+          <h2 className="text-xs font-semibold text-content-primary uppercase tracking-wider">
             Parámetros del Artículo
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+              <label className="block text-xs font-semibold text-content-primary mb-1">
                 Código Artículo
               </label>
               <input
@@ -235,22 +232,22 @@ export const NuevoRemitoPage: React.FC = () => {
                 value={codart}
                 onChange={(e) => {
                   setCodart(Number(e.target.value));
-                  if (!esCompra) setUnidades([]); // Reiniciar selección si cambia el artículo en traslados
+                  if (!esCompra) setUnidades([]);
                 }}
                 disabled={loading}
-                className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-white font-mono focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full bg-white border border-stroke rounded-md p-2 text-xs text-content-primary font-mono focus:outline-none focus:border-brand-hover focus:ring-1 focus:ring-brand-light"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+              <label className="block text-xs font-semibold text-content-primary mb-1">
                 Rubro
               </label>
               <select
                 value={rubro}
                 onChange={(e) => setRubro(Number(e.target.value))}
                 disabled={loading}
-                className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full bg-white border border-stroke rounded-md p-2 text-xs text-content-primary focus:outline-none focus:border-brand-hover focus:ring-1 focus:ring-brand-light"
               >
                 <option value={5}>Rubro 5 (Motos - Motor/Chasis físicos)</option>
                 <option value={13}>Rubro 13 (Bicicletas - Motor/Chasis = Unicode)</option>
@@ -259,7 +256,7 @@ export const NuevoRemitoPage: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+              <label className="block text-xs font-semibold text-content-primary mb-1">
                 Observación
               </label>
               <input
@@ -268,20 +265,19 @@ export const NuevoRemitoPage: React.FC = () => {
                 onChange={(e) => setObserva(e.target.value)}
                 placeholder="Ej. Traslado programado..."
                 disabled={loading}
-                className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full bg-white border border-stroke rounded-md p-2 text-xs text-content-primary focus:outline-none focus:border-brand-hover focus:ring-1 focus:ring-brand-light"
               />
             </div>
           </div>
         </div>
 
-        {/* Padrón de Unidades Físicas */}
-        <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+        <div className="bg-white border border-stroke rounded-lg p-4 space-y-3 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-sm font-semibold text-white uppercase tracking-wider">
+              <h2 className="text-xs font-semibold text-content-primary uppercase tracking-wider">
                 Padrón de Unidades ({unidades.length})
               </h2>
-              <p className="text-xs text-slate-500">
+              <p className="text-[11px] text-content-secondary">
                 {esCompra
                   ? 'Carga de unidades nuevas para ingreso al stock.'
                   : `Seleccione unidades existentes en ${obtenerNombreSucursal(origen)}.`}
@@ -293,9 +289,9 @@ export const NuevoRemitoPage: React.FC = () => {
                 type="button"
                 onClick={agregarFilaManual}
                 disabled={loading}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-blue-400 text-xs font-medium rounded-lg border border-slate-700 transition-colors"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-secondary hover:bg-stroke text-content-primary text-xs font-semibold rounded-md transition-colors duration-150"
               >
-                <Plus size={14} />
+                <Plus size={13} />
                 <span>Añadir Fila</span>
               </button>
             ) : (
@@ -303,26 +299,26 @@ export const NuevoRemitoPage: React.FC = () => {
                 type="button"
                 onClick={() => setModalStockOpen(true)}
                 disabled={loading}
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-medium rounded-lg shadow-lg shadow-blue-600/20 transition-all"
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-brand-hover hover:bg-brand-pressed text-white text-xs font-semibold rounded-md shadow-sm transition-colors duration-150"
               >
-                <Layers size={14} />
+                <Layers size={13} />
                 <span>Seleccionar del Stock ({obtenerNombreSucursal(origen)})</span>
               </button>
             )}
           </div>
 
           {unidades.length === 0 ? (
-            <div className="p-6 bg-slate-950 border border-slate-800/80 rounded-lg text-center text-xs text-slate-500">
+            <div className="p-6 bg-surface-hover border border-stroke rounded-md text-center text-xs text-content-secondary">
               No hay unidades cargadas en este remito.
             </div>
           ) : (
-            <div className="space-y-3">
+            <div className="space-y-2">
               {unidades.map((u, index) => (
                 <div 
                   key={index} 
-                  className="p-3 bg-slate-950 border border-slate-800/80 rounded-lg grid grid-cols-1 sm:grid-cols-12 gap-3 items-center"
+                  className="p-2.5 bg-surface-hover border border-stroke rounded-md grid grid-cols-1 sm:grid-cols-12 gap-2.5 items-center"
                 >
-                  <div className="sm:col-span-1 text-center font-mono text-xs text-slate-500 font-bold">
+                  <div className="sm:col-span-1 text-center font-mono text-xs text-content-secondary font-bold">
                     {u.unicode ? `#${u.unicode}` : `#${index + 1}`}
                   </div>
 
@@ -334,8 +330,8 @@ export const NuevoRemitoPage: React.FC = () => {
                       readOnly={!esCompra}
                       onChange={(e) => actualizarFilaManual(index, 'motor', e.target.value)}
                       disabled={loading || (esCompra && rubro !== 5)}
-                      className={`w-full bg-slate-900 border border-slate-800 rounded p-2 text-xs text-white font-mono placeholder-slate-600 focus:outline-none focus:ring-1 focus:ring-blue-500 ${
-                        !esCompra ? 'opacity-80 bg-slate-900/40 cursor-default' : ''
+                      className={`w-full bg-white border border-stroke rounded p-1.5 text-xs text-content-primary font-mono placeholder-content-disabled focus:outline-none focus:border-brand-hover focus:ring-1 focus:ring-brand-light ${
+                        !esCompra ? 'bg-surface-secondary cursor-default' : ''
                       }`}
                     />
                   </div>
@@ -348,8 +344,8 @@ export const NuevoRemitoPage: React.FC = () => {
                       readOnly={!esCompra}
                       onChange={(e) => actualizarFilaManual(index, 'chasis', e.target.value)}
                       disabled={loading || (esCompra && rubro !== 5)}
-                      className={`w-full bg-slate-900 border border-slate-800 rounded p-2 text-xs text-white font-mono placeholder-slate-600 focus:outline-none focus:ring-1 focus:ring-blue-500 ${
-                        !esCompra ? 'opacity-80 bg-slate-900/40 cursor-default' : ''
+                      className={`w-full bg-white border border-stroke rounded p-1.5 text-xs text-content-primary font-mono placeholder-content-disabled focus:outline-none focus:border-brand-hover focus:ring-1 focus:ring-brand-light ${
+                        !esCompra ? 'bg-surface-secondary cursor-default' : ''
                       }`}
                     />
                   </div>
@@ -360,7 +356,7 @@ export const NuevoRemitoPage: React.FC = () => {
                         value={u.color}
                         onChange={(e) => actualizarFilaManual(index, 'color', e.target.value)}
                         disabled={loading}
-                        className="w-full bg-slate-900 border border-slate-800 rounded p-2 text-xs text-white focus:outline-none focus:ring-1 focus:ring-blue-500"
+                        className="w-full bg-white border border-stroke rounded p-1.5 text-xs text-content-primary focus:outline-none focus:border-brand-hover focus:ring-1 focus:ring-brand-light"
                       >
                         {COLORES_OPCIONES.map((c) => (
                           <option key={c.codigo} value={c.codigo}>
@@ -369,7 +365,7 @@ export const NuevoRemitoPage: React.FC = () => {
                         ))}
                       </select>
                     ) : (
-                      <span className="inline-flex items-center px-2 py-1.5 rounded bg-slate-900 text-xs text-slate-300 border border-slate-800 w-full">
+                      <span className="inline-block px-2 py-1.5 rounded bg-surface-secondary text-xs text-content-primary border border-stroke w-full text-center">
                         {u.color}
                       </span>
                     )}
@@ -380,10 +376,10 @@ export const NuevoRemitoPage: React.FC = () => {
                       type="button"
                       onClick={() => quitarFilaUnidad(index)}
                       disabled={loading}
-                      className="p-1.5 text-slate-500 hover:text-red-400 transition-colors"
-                      title="Eliminar fila"
+                      className="p-1 text-content-secondary hover:text-error transition-colors duration-150"
+                      title="Quitar fila"
                     >
-                      <Trash2 size={16} />
+                      <Trash2 size={15} />
                     </button>
                   </div>
                 </div>
@@ -392,13 +388,12 @@ export const NuevoRemitoPage: React.FC = () => {
           )}
         </div>
 
-        {/* Acciones */}
-        <div className="flex items-center justify-end gap-3 pt-2">
+        <div className="flex items-center justify-end gap-2 pt-2">
           <button
             type="button"
             disabled={loading}
             onClick={() => navigate('/remitos')}
-            className="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-sm transition-colors"
+            className="px-4 py-2 bg-surface-secondary hover:bg-stroke text-content-primary rounded-md text-xs font-semibold transition-colors duration-150"
           >
             Cancelar
           </button>
@@ -406,16 +401,16 @@ export const NuevoRemitoPage: React.FC = () => {
           <button
             type="submit"
             disabled={loading || unidades.length === 0}
-            className="inline-flex items-center gap-2 px-6 py-2.5 bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white font-medium text-sm rounded-lg shadow-lg shadow-blue-600/25 transition-all disabled:opacity-50"
+            className="inline-flex items-center gap-2 px-5 py-2 bg-brand-hover hover:bg-brand-pressed text-white font-semibold text-xs rounded-md shadow-sm transition-colors duration-150 disabled:opacity-50"
           >
             {loading ? (
               <>
-                <RotateCcw size={16} className="animate-spin" />
+                <RotateCcw size={14} className="animate-spin" />
                 <span>Procesando...</span>
               </>
             ) : (
               <>
-                <Save size={16} />
+                <Save size={14} />
                 <span>Confirmar y Crear Remito</span>
               </>
             )}

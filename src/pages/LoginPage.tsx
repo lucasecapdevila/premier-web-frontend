@@ -29,59 +29,58 @@ export const LoginPage: React.FC = () => {
       navigate(from, { replace: true });
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } } };
-      const mensaje = err.response?.data?.message ?? 'Error al iniciar sesión';
-      toast.error(mensaje);
+      toast.error(err.response?.data?.message ?? 'Credenciales inválidas');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-slate-800 border border-slate-700 rounded-xl shadow-2xl p-8">
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-blue-600 text-white font-bold text-xl mb-3 shadow-lg shadow-blue-500/30">
+    <div className="min-h-screen bg-canvas flex items-center justify-center p-4 font-sans">
+      <div className="w-full max-w-md bg-white border border-stroke rounded-xl shadow-sm p-8">
+        <div className="text-center mb-7">
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded bg-brand text-white font-bold text-xl mb-3 shadow-sm">
             P
           </div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">Premier Web</h1>
-          <p className="text-slate-400 text-sm mt-1">Gestión Centralizada de Remitos y Unidades</p>
+          <h1 className="text-2xl font-bold text-content-primary tracking-tight">Premier Web</h1>
+          <p className="text-content-secondary text-xs mt-1">Gestión Centralizada de Remitos y Unidades</p>
         </div>
 
-        <form onSubmit={(e) => void handleSubmit(e.nativeEvent)} className="space-y-5">
+        <form onSubmit={(e) => void handleSubmit(e.nativeEvent)} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+            <label className="block text-xs font-semibold text-content-primary uppercase tracking-wider mb-1.5">
               Usuario
             </label>
             <div className="relative">
-              <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400 pointer-events-none">
-                <User size={18} />
+              <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-content-secondary pointer-events-none">
+                <User size={16} />
               </span>
               <input
                 type="text"
                 value={username}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)}
+                onChange={(e) => setUsername(e.target.value)}
                 placeholder="Ej. lucas"
                 disabled={loading}
-                className="w-full pl-10 pr-4 py-2.5 bg-slate-900/60 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all disabled:opacity-50"
+                className="w-full pl-9 pr-3 py-2 bg-white border border-stroke rounded-md text-sm text-content-primary placeholder-content-disabled focus:outline-none focus:border-brand-hover focus:ring-1 focus:ring-brand-light transition-colors duration-150 disabled:bg-surface-secondary"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+            <label className="block text-xs font-semibold text-content-primary uppercase tracking-wider mb-1.5">
               Contraseña
             </label>
             <div className="relative">
-              <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400 pointer-events-none">
-                <Lock size={18} />
+              <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-content-secondary pointer-events-none">
+                <Lock size={16} />
               </span>
               <input
                 type="password"
                 value={password}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+                onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
                 disabled={loading}
-                className="w-full pl-10 pr-4 py-2.5 bg-slate-900/60 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all disabled:opacity-50"
+                className="w-full pl-9 pr-3 py-2 bg-white border border-stroke rounded-md text-sm text-content-primary placeholder-content-disabled focus:outline-none focus:border-brand-hover focus:ring-1 focus:ring-brand-light transition-colors duration-150 disabled:bg-surface-secondary"
               />
             </div>
           </div>
@@ -89,14 +88,14 @@ export const LoginPage: React.FC = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full mt-2 inline-flex items-center justify-center gap-2 py-3 px-4 bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white font-medium text-sm rounded-lg transition-colors shadow-lg shadow-blue-600/25 disabled:opacity-50 disabled:pointer-events-none"
+            className="w-full mt-3 inline-flex items-center justify-center gap-2 py-2.5 px-4 bg-brand-hover hover:bg-brand-pressed active:bg-brand-pressed text-white font-medium text-sm rounded-md transition-colors duration-150 shadow-sm disabled:opacity-50"
           >
             {loading ? (
               <span>Autenticando...</span>
             ) : (
               <>
                 <span>Ingresar al Sistema</span>
-                <ArrowRight size={16} />
+                <ArrowRight size={15} />
               </>
             )}
           </button>

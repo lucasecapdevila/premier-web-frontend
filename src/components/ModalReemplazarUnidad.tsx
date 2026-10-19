@@ -104,12 +104,12 @@ export const ModalReemplazarUnidad: React.FC<ModalReemplazarUnidadProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-      <div className="bg-slate-900 border border-slate-800 rounded-xl max-w-xl w-full p-6 shadow-2xl">
-        <div className="flex items-center justify-between pb-4 border-b border-slate-800">
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+      <div className="bg-white border border-stroke rounded-xl max-w-lg w-full p-6 shadow-xl">
+        <div className="flex items-center justify-between pb-3 border-b border-stroke">
           <div className="flex items-center gap-2">
-            <RefreshCw className="text-blue-500" size={20} />
-            <h3 className="text-lg font-bold text-white">
+            <RefreshCw className="text-brand-hover" size={18} />
+            <h3 className="text-base font-bold text-content-primary">
               Reemplazar Unidad en Remito #{nroRemito}
             </h3>
           </div>
@@ -117,28 +117,32 @@ export const ModalReemplazarUnidad: React.FC<ModalReemplazarUnidadProps> = ({
             type="button"
             onClick={onClose}
             disabled={procesando}
-            className="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition-colors"
+            className="p-1 text-content-secondary hover:text-content-primary rounded hover:bg-surface-secondary transition-colors"
           >
-            <X size={18} />
+            <X size={16} />
           </button>
         </div>
 
-        <form onSubmit={(e) => void handleSubmit(e.nativeEvent)} className="space-y-4 pt-4">
-          <div className="p-3 bg-slate-950 border border-slate-800 rounded-lg text-xs space-y-1">
-            <div className="text-slate-400">
-              Artículo: <span className="text-slate-200 font-medium">{unidadSaliente.descripcion}</span> ({unidadSaliente.codart})
+        <form onSubmit={(e) => void handleSubmit(e.nativeEvent)} className="space-y-4 pt-3">
+          <div className="p-3 bg-surface-hover border border-stroke rounded-md text-xs space-y-0.5">
+            <div>
+              <span className="text-content-secondary">Artículo:</span>{' '}
+              <span className="font-semibold text-content-primary">{unidadSaliente.descripcion}</span>{' '}
+              <span className="font-mono text-content-secondary">({unidadSaliente.codart})</span>
             </div>
-            <div className="text-slate-400">
-              Circuito: <span className="text-slate-200 font-medium">{origenNombre}</span> → <span className="text-slate-200 font-medium">{destinoNombre}</span>
+            <div>
+              <span className="text-content-secondary">Circuito:</span>{' '}
+              <span className="font-semibold text-content-primary">{origenNombre}</span> &rarr;{' '}
+              <span className="font-semibold text-content-primary">{destinoNombre}</span>
             </div>
           </div>
 
-          <div className="p-3 bg-red-950/20 border border-red-900/40 rounded-lg">
-            <span className="block text-xs font-semibold uppercase text-red-400 mb-1">
-              Unidad Saliente (Vuelve a {origenNombre})
+          <div className="p-3 bg-[#FEE2E2]/50 border border-error/20 rounded-md">
+            <span className="block text-[11px] font-semibold uppercase text-[#991B1B] mb-1">
+              Unidad Saliente (Regresa a {origenNombre})
             </span>
-            <div className="grid grid-cols-2 gap-2 text-xs text-slate-300 font-mono">
-              <div>Unicode: <strong className="text-white">#{unidadSaliente.unicode}</strong></div>
+            <div className="grid grid-cols-2 gap-2 text-xs font-mono text-content-primary">
+              <div>Unicode: <strong>#{unidadSaliente.unicode}</strong></div>
               <div>Color: {unidadSaliente.color_nombre}</div>
               <div>Motor: {unidadSaliente.motor}</div>
               <div>Chasis: {unidadSaliente.chasis}</div>
@@ -146,18 +150,18 @@ export const ModalReemplazarUnidad: React.FC<ModalReemplazarUnidadProps> = ({
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-300 uppercase mb-1.5">
+            <label className="block text-xs font-semibold text-content-primary uppercase mb-1">
               Unidad Entrante Disponible en {origenNombre} (* Obligatorio)
             </label>
 
             {loadingDisponibles ? (
-              <div className="p-2.5 bg-slate-950 border border-slate-800 rounded-lg text-xs text-slate-400 flex items-center gap-2">
-                <RefreshCw size={14} className="animate-spin text-blue-500" />
-                <span>Buscando unidades activas en stock de origen...</span>
+              <div className="p-2.5 bg-surface-hover border border-stroke rounded-md text-xs text-content-secondary flex items-center gap-2">
+                <RefreshCw size={13} className="animate-spin text-brand-hover" />
+                <span>Buscando inventario en origen...</span>
               </div>
             ) : disponibles.length === 0 ? (
-              <div className="p-3 bg-amber-950/30 border border-amber-900/50 rounded-lg text-xs text-amber-300 flex items-center gap-2">
-                <AlertTriangle size={16} className="shrink-0 text-amber-400" />
+              <div className="p-3 bg-warning-soft border border-warning/30 rounded-md text-xs text-warning-dark flex items-center gap-2">
+                <AlertTriangle size={15} className="shrink-0 text-warning" />
                 <span>No hay otras unidades activas de este artículo en {origenNombre}.</span>
               </div>
             ) : (
@@ -165,11 +169,11 @@ export const ModalReemplazarUnidad: React.FC<ModalReemplazarUnidadProps> = ({
                 value={unicodeEntrante}
                 onChange={(e) => setUnicodeEntrante(Number(e.target.value))}
                 disabled={procesando}
-                className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs font-mono text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full bg-white border border-stroke rounded-md p-2 text-xs font-mono text-content-primary focus:outline-none focus:border-brand-hover focus:ring-1 focus:ring-brand-light"
               >
                 {disponibles.map((disp) => (
                   <option key={disp.unicode} value={disp.unicode}>
-                    #{disp.unicode} — Motor: {disp.motor} | Chasis: {disp.chasis} | {disp.color_nombre}
+                    #{disp.unicode} &mdash; Motor: {disp.motor} | Chasis: {disp.chasis} | {disp.color_nombre}
                   </option>
                 ))}
               </select>
@@ -177,7 +181,7 @@ export const ModalReemplazarUnidad: React.FC<ModalReemplazarUnidadProps> = ({
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-300 uppercase mb-1.5">
+            <label className="block text-xs font-semibold text-content-primary uppercase mb-1">
               Motivo del Reemplazo (* Obligatorio)
             </label>
             <textarea
@@ -185,34 +189,34 @@ export const ModalReemplazarUnidad: React.FC<ModalReemplazarUnidadProps> = ({
               rows={2}
               value={motivo}
               onChange={(e) => setMotivo(e.target.value)}
-              placeholder="Ej: Cambio de unidad por error en carga de número de chasis..."
+              placeholder="Detalle el motivo técnico o administrativo del cambio..."
               disabled={procesando}
-              className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+              className="w-full bg-white border border-stroke rounded-md p-2 text-xs text-content-primary placeholder-content-disabled focus:outline-none focus:border-brand-hover focus:ring-1 focus:ring-brand-light resize-none"
             />
           </div>
 
-          <div className="flex items-center justify-end gap-3 pt-2">
+          <div className="flex items-center justify-end gap-2 pt-2">
             <button
               type="button"
               disabled={procesando}
               onClick={onClose}
-              className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs transition-colors"
+              className="px-3.5 py-2 bg-surface-secondary hover:bg-surface-hover text-content-primary rounded-md text-xs font-medium transition-colors"
             >
               Cancelar
             </button>
             <button
               type="submit"
               disabled={procesando || loadingDisponibles || disponibles.length === 0}
-              className="inline-flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-medium transition-colors shadow-lg shadow-blue-600/30 disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-error hover:bg-error-hover text-white rounded-md text-xs font-semibold transition-colors shadow-sm disabled:opacity-50"
             >
               {procesando ? (
                 <>
-                  <RefreshCw size={14} className="animate-spin" />
+                  <RefreshCw size={13} className="animate-spin" />
                   <span>Procesando...</span>
                 </>
               ) : (
                 <>
-                  <RefreshCw size={14} />
+                  <RefreshCw size={13} />
                   <span>Confirmar Reemplazo</span>
                 </>
               )}

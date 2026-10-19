@@ -38,86 +38,86 @@ export const RemitosPage: React.FC = () => {
   });
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-5">
+    <div className="space-y-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-stroke pb-4">
         <div>
-          <h1 className="text-2xl font-bold text-white tracking-tight flex items-center gap-2">
-            <FileText className="text-blue-500" size={24} />
+          <h1 className="text-2xl font-bold text-content-primary tracking-tight flex items-center gap-2">
+            <FileText className="text-brand-hover" size={22} />
             Gestión de Remitos
           </h1>
-          <p className="text-sm text-slate-400 mt-0.5">
-            Movimientos consolidados de compras y traslados de unidades.
+          <p className="text-xs text-content-secondary mt-0.5">
+            Movimientos consolidados de compras y traslados entre sucursales.
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={() => void cargarRemitos()}
             disabled={loading}
-            className="p-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg border border-slate-700 transition-colors disabled:opacity-50"
-            title="Recargar datos"
+            className="p-2 bg-white hover:bg-surface-hover text-content-secondary hover:text-content-primary rounded-md border border-stroke transition-colors duration-150 disabled:opacity-50"
+            title="Recargar listado"
           >
-            <RotateCcw size={16} className={loading ? 'animate-spin' : ''} />
+            <RotateCcw size={15} className={loading ? 'animate-spin' : ''} />
           </button>
 
           <button
             type="button"
             onClick={() => navigate('/remitos/nuevo')}
-            className="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium rounded-lg shadow-lg shadow-blue-600/20 transition-all"
+            className="inline-flex items-center gap-2 px-3.5 py-2 bg-brand-hover hover:bg-brand-pressed text-white text-xs font-semibold rounded-md shadow-sm transition-colors duration-150"
           >
-            <Plus size={16} />
+            <Plus size={15} />
             <span>Nuevo Remito</span>
           </button>
         </div>
       </div>
 
-      <div className="flex items-center bg-slate-900 border border-slate-800 rounded-lg px-3.5 py-2 max-w-md">
-        <Search size={16} className="text-slate-500 mr-2.5 shrink-0" />
+      <div className="flex items-center bg-white border border-stroke rounded-md px-3 py-1.5 max-w-sm">
+        <Search size={15} className="text-content-secondary mr-2 shrink-0" />
         <input
           type="text"
           value={filtroTexto}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFiltroTexto(e.target.value)}
-          placeholder="Buscar por remito, origen, destino u operador..."
-          className="bg-transparent border-none text-sm text-white placeholder-slate-500 focus:outline-none w-full"
+          onChange={(e) => setFiltroTexto(e.target.value)}
+          placeholder="Buscar por número, sucursal u operador..."
+          className="bg-transparent border-none text-xs text-content-primary placeholder-content-disabled focus:outline-none w-full"
         />
         {filtroTexto && (
           <button
             type="button"
             onClick={() => setFiltroTexto('')}
-            className="text-xs text-slate-400 hover:text-white ml-2"
+            className="text-[11px] text-content-secondary hover:text-content-primary ml-2"
           >
             Limpiar
           </button>
         )}
       </div>
 
-      <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-xl">
+      <div className="bg-white border border-stroke rounded-lg overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm text-slate-300">
-            <thead className="bg-slate-800/60 border-b border-slate-700/60 text-xs uppercase text-slate-400 tracking-wider">
+          <table className="w-full text-left text-xs text-content-primary">
+            <thead className="bg-surface-secondary border-b border-stroke text-[11px] uppercase text-content-secondary tracking-wider font-semibold">
               <tr>
-                <th className="py-3.5 px-4 font-semibold">N° Remito</th>
-                <th className="py-3.5 px-4 font-semibold">Fecha</th>
-                <th className="py-3.5 px-4 font-semibold">Origen</th>
-                <th className="py-3.5 px-4 font-semibold">Destino</th>
-                <th className="py-3.5 px-4 font-semibold text-center">Unidades</th>
-                <th className="py-3.5 px-4 font-semibold">Operador</th>
-                <th className="py-3.5 px-4 font-semibold">Estado</th>
-                <th className="py-3.5 px-4 font-semibold text-right">Acciones</th>
+                <th className="py-3 px-4">N° Remito</th>
+                <th className="py-3 px-4">Fecha</th>
+                <th className="py-3 px-4">Origen</th>
+                <th className="py-3 px-4">Destino</th>
+                <th className="py-3 px-4 text-center">Unidades</th>
+                <th className="py-3 px-4">Operador</th>
+                <th className="py-3 px-4">Estado</th>
+                <th className="py-3 px-4 text-right">Acción</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/80">
+            <tbody className="divide-y divide-stroke">
               {loading ? (
                 <tr>
-                  <td colSpan={8} className="py-12 text-center text-slate-400">
-                    <RotateCcw className="animate-spin inline-block mr-2" size={18} />
+                  <td colSpan={8} className="py-10 text-center text-content-secondary">
+                    <RotateCcw className="animate-spin inline-block mr-2 text-brand-hover" size={16} />
                     Cargando remitos...
                   </td>
                 </tr>
               ) : remitosFiltrados.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="py-12 text-center text-slate-500">
+                  <td colSpan={8} className="py-10 text-center text-content-secondary">
                     No se encontraron remitos con los criterios aplicados.
                   </td>
                 </tr>
@@ -125,72 +125,72 @@ export const RemitosPage: React.FC = () => {
                 remitosFiltrados.map((remito: RemitoConsolidado) => (
                   <tr
                     key={remito.nro}
-                    className={`hover:bg-slate-800/40 transition-colors ${
-                      remito.es_anulado ? 'opacity-60 bg-red-950/10' : ''
+                    className={`hover:bg-surface-hover transition-colors duration-150 ${
+                      remito.es_anulado ? 'bg-[#FEE2E2]/30 text-content-secondary' : ''
                     }`}
                   >
-                    <td className="py-3.5 px-4 font-mono font-bold text-white">
+                    <td className="py-3 px-4 font-mono font-bold text-content-primary">
                       #{remito.nro}
                     </td>
 
-                    <td className="py-3.5 px-4 text-slate-400">
+                    <td className="py-3 px-4 text-content-secondary">
                       {remito.fecha.replace(/(\d{4})(\d{2})(\d{2})/, '$3/$2/$1')}
                     </td>
 
-                    <td className="py-3.5 px-4">
-                      <span className="font-medium text-slate-200">{remito.de_nombre}</span>
-                      <span className="text-xs text-slate-500 ml-1.5 font-mono">({remito.de})</span>
+                    <td className="py-3 px-4 font-medium text-content-primary">
+                      {remito.de_nombre}{' '}
+                      <span className="text-[11px] text-content-secondary font-mono">({remito.de})</span>
                     </td>
 
-                    <td className="py-3.5 px-4">
+                    <td className="py-3 px-4 font-medium text-content-primary">
                       <div className="flex items-center gap-1.5">
-                        <ArrowRight size={13} className="text-slate-600" />
-                        <span className="font-medium text-slate-200">{remito.a_nombre}</span>
-                        <span className="text-xs text-slate-500 font-mono">({remito.a})</span>
+                        <ArrowRight size={12} className="text-content-secondary" />
+                        <span>{remito.a_nombre}</span>{' '}
+                        <span className="text-[11px] text-content-secondary font-mono">({remito.a})</span>
                       </div>
                     </td>
 
-                    <td className="py-3.5 px-4 text-center">
-                      <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700">
+                    <td className="py-3 px-4 text-center font-mono font-semibold">
+                      <span className="inline-block px-2 py-0.5 bg-surface-secondary border border-stroke rounded text-[11px]">
                         {remito.total_unidades}
                       </span>
                     </td>
 
-                    <td className="py-3.5 px-4 font-mono text-xs text-slate-400">
+                    <td className="py-3 px-4 font-mono text-[11px] text-content-secondary">
                       {remito.operador}
                     </td>
 
-                    <td className="py-3.5 px-4">
+                    <td className="py-3 px-4">
                       {remito.es_anulado ? (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-900/40 text-red-400 border border-red-800/60">
-                          <Ban size={11} />
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold bg-[#FEE2E2] text-[#991B1B] border border-error/20">
+                          <Ban size={10} />
                           Anulado
                         </span>
                       ) : (
                         <div className="flex items-center gap-1.5">
-                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-900/30 text-emerald-400 border border-emerald-800/60">
-                            <CheckCircle2 size={11} />
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold bg-success-sofft text-success-dark border border-success/20">
+                            <CheckCircle2 size={10} />
                             Activo
                           </span>
                           {remito.en_ventana_24h && (
                             <span
-                              className="text-amber-400 hover:text-amber-300 transition-colors"
+                              className="text-warning"
                               title="Dentro de ventana de 24h para edición/anulación"
                             >
-                              <Clock size={13} />
+                              <Clock size={12} />
                             </span>
                           )}
                         </div>
                       )}
                     </td>
 
-                    <td className="py-3.5 px-4 text-right">
+                    <td className="py-3 px-4 text-right">
                       <button
                         type="button"
                         onClick={() => navigate(`/remitos/${remito.nro}`)}
-                        className="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white text-xs font-medium rounded-md border border-slate-700 transition-all"
+                        className="inline-flex items-center gap-1 px-2.5 py-1 bg-white hover:bg-surface-secondary text-content-primary text-[11px] font-semibold rounded border border-stroke transition-colors duration-150"
                       >
-                        <Eye size={13} />
+                        <Eye size={12} />
                         <span>Ver</span>
                       </button>
                     </td>

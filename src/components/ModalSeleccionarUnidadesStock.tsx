@@ -8,7 +8,7 @@ interface ModalSeleccionarUnidadesStockProps {
   sucursalId: number;
   sucursalNombre: string;
   codart: number;
-  seleccionadasPreviamente: number[]; // IDs de unidades ya agregadas
+  seleccionadasPreviamente: number[];
   onClose: () => void;
   onConfirmar: (unidades: UnidadDisponibleStock[]) => void;
 }
@@ -35,7 +35,6 @@ export const ModalSeleccionarUnidadesStock: React.FC<ModalSeleccionarUnidadesSto
           params: { sucursal: sucursalId, codart },
         });
         if (activo) {
-          // Filtrar las que ya estén añadidas en la grilla previa
           const disponibles = res.data.filter(
             (u) => !seleccionadasPreviamente.includes(u.id)
           );
@@ -71,16 +70,16 @@ export const ModalSeleccionarUnidadesStock: React.FC<ModalSeleccionarUnidadesSto
   };
 
   return (
-    <div className="fixed inset-0 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-      <div className="bg-slate-900 border border-slate-800 rounded-xl max-w-2xl w-full p-6 shadow-2xl flex flex-col max-h-[85vh]">
-        <div className="flex items-center justify-between pb-4 border-b border-slate-800 shrink-0">
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+      <div className="bg-white border border-stroke rounded-xl max-w-2xl w-full p-6 shadow-xl flex flex-col max-h-[85vh]">
+        <div className="flex items-center justify-between pb-3 border-b border-stroke shrink-0">
           <div className="flex items-center gap-2">
-            <Layers className="text-blue-500" size={20} />
+            <Layers className="text-brand-hover" size={18} />
             <div>
-              <h3 className="text-lg font-bold text-white">
+              <h3 className="text-base font-bold text-content-primary">
                 Seleccionar Unidades en {sucursalNombre}
               </h3>
-              <p className="text-xs text-slate-400">
+              <p className="text-[11px] text-content-secondary">
                 Artículo #{codart} disponible para traslado.
               </p>
             </div>
@@ -88,58 +87,58 @@ export const ModalSeleccionarUnidadesStock: React.FC<ModalSeleccionarUnidadesSto
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition-colors"
+            className="p-1 text-content-secondary hover:text-content-primary rounded hover:bg-surface-secondary transition-colors"
           >
-            <X size={18} />
+            <X size={16} />
           </button>
         </div>
 
-        <div className="py-4 overflow-y-auto flex-1 space-y-2">
+        <div className="py-3 overflow-y-auto flex-1 space-y-2">
           {loading ? (
-            <div className="py-12 flex flex-col items-center justify-center text-slate-400">
-              <RotateCcw size={24} className="animate-spin text-blue-500 mb-2" />
-              <p className="text-xs">Consultando inventario en la sucursal...</p>
+            <div className="py-10 flex flex-col items-center justify-center text-content-secondary">
+              <RotateCcw size={20} className="animate-spin text-brand-hover mb-2" />
+              <p className="text-xs">Consultando inventario en sucursal...</p>
             </div>
           ) : unidades.length === 0 ? (
-            <div className="p-4 bg-amber-950/20 border border-amber-900/40 rounded-lg text-xs text-amber-300 flex items-center gap-2">
-              <AlertTriangle size={16} className="text-amber-400 shrink-0" />
+            <div className="p-3 bg-warning-soft border border-warning/30 rounded-md text-xs text-warning-dark flex items-center gap-2">
+              <AlertTriangle size={15} className="text-warning shrink-0" />
               <span>No se encontraron unidades activas disponibles de este artículo en {sucursalNombre}.</span>
             </div>
           ) : (
-            <div className="border border-slate-800 rounded-lg overflow-hidden">
-              <table className="w-full text-left text-xs text-slate-300">
-                <thead className="bg-slate-800/50 uppercase text-slate-400 border-b border-slate-800">
+            <div className="border border-stroke rounded-md overflow-hidden">
+              <table className="w-full text-left text-xs text-content-primary">
+                <thead className="bg-surface-secondary uppercase text-content-secondary border-b border-stroke text-[11px] font-semibold">
                   <tr>
-                    <th className="py-2.5 px-3 text-center w-10">Sel.</th>
-                    <th className="py-2.5 px-3">Unicode</th>
-                    <th className="py-2.5 px-3">Motor</th>
-                    <th className="py-2.5 px-3">Chasis</th>
-                    <th className="py-2.5 px-3">Color</th>
+                    <th className="py-2 px-3 text-center w-10">Sel.</th>
+                    <th className="py-2 px-3">Unicode</th>
+                    <th className="py-2 px-3">Motor</th>
+                    <th className="py-2 px-3">Chasis</th>
+                    <th className="py-2 px-3">Color</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-800">
+                <tbody className="divide-y divide-stroke">
                   {unidades.map((u) => {
                     const checked = seleccionados.includes(u.id);
                     return (
                       <tr
                         key={u.id}
                         onClick={() => toggleSeleccion(u.id)}
-                        className={`cursor-pointer transition-colors ${
-                          checked ? 'bg-blue-950/30 text-white' : 'hover:bg-slate-800/40'
+                        className={`cursor-pointer transition-colors duration-150 ${
+                          checked ? 'bg-[#FEE2E2]/40 text-content-primary' : 'hover:bg-surface-hover'
                         }`}
                       >
-                        <td className="py-2.5 px-3 text-center">
+                        <td className="py-2 px-3 text-center">
                           <input
                             type="checkbox"
                             checked={checked}
-                            onChange={() => {}} // Manejado por onClick de fila
-                            className="rounded border-slate-700 bg-slate-900 text-blue-600 focus:ring-0"
+                            onChange={() => {}}
+                            className="rounded border-stroke text-brand-hover focus:ring-brand-light"
                           />
                         </td>
-                        <td className="py-2.5 px-3 font-mono font-bold text-blue-400">#{u.unicode}</td>
-                        <td className="py-2.5 px-3 font-mono">{u.motor}</td>
-                        <td className="py-2.5 px-3 font-mono">{u.chasis}</td>
-                        <td className="py-2.5 px-3">{u.color_nombre}</td>
+                        <td className="py-2 px-3 font-mono font-bold text-content-primary">#{u.unicode}</td>
+                        <td className="py-2 px-3 font-mono text-[11px]">{u.motor}</td>
+                        <td className="py-2 px-3 font-mono text-[11px]">{u.chasis}</td>
+                        <td className="py-2 px-3 text-content-secondary">{u.color_nombre}</td>
                       </tr>
                     );
                   })}
@@ -149,15 +148,15 @@ export const ModalSeleccionarUnidadesStock: React.FC<ModalSeleccionarUnidadesSto
           )}
         </div>
 
-        <div className="pt-4 border-t border-slate-800 flex items-center justify-between shrink-0">
-          <span className="text-xs text-slate-400">
-            Seleccionadas: <strong className="text-white">{seleccionados.length}</strong>
+        <div className="pt-3 border-t border-stroke flex items-center justify-between shrink-0">
+          <span className="text-xs text-content-secondary">
+            Seleccionadas: <strong className="text-content-primary font-mono">{seleccionados.length}</strong>
           </span>
           <div className="flex items-center gap-2">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs transition-colors"
+              className="px-3.5 py-1.5 bg-surface-secondary hover:bg-stroke text-content-primary rounded-md text-xs font-medium transition-colors"
             >
               Cancelar
             </button>
@@ -165,9 +164,9 @@ export const ModalSeleccionarUnidadesStock: React.FC<ModalSeleccionarUnidadesSto
               type="button"
               disabled={seleccionados.length === 0}
               onClick={handleAceptar}
-              className="inline-flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-medium transition-colors shadow-lg shadow-blue-600/25 disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-brand-hover hover:bg-brand-pressed text-white rounded-md text-xs font-semibold transition-colors shadow-sm disabled:opacity-50"
             >
-              <Check size={14} />
+              <Check size={13} />
               <span>Agregar al Remito</span>
             </button>
           </div>

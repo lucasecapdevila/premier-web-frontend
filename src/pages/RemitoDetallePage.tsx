@@ -272,9 +272,6 @@ export const RemitoDetallePage: React.FC = () => {
             <CheckCircle2 size={14} className="text-success" />
             Trazabilidad de Unidades Físicas (Padrón)
           </h2>
-          <span className="text-[11px] font-mono text-content-secondary">
-            Fuente: jlv_motomov
-          </span>
         </div>
         <table className="w-full text-left text-xs text-content-primary">
           <thead className="bg-surface-hover border-b border-stroke text-[11px] uppercase text-content-secondary font-semibold">

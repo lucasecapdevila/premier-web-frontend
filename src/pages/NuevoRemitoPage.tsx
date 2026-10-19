@@ -162,7 +162,6 @@ export const NuevoRemitoPage: React.FC = () => {
           </button>
           <div>
             <h1 className="text-2xl font-bold text-content-primary tracking-tight flex items-center gap-2">
-              <PackagePlus className="text-brand-hover" size={22} />
               Generación de Remito
             </h1>
             <p className="text-xs text-content-secondary mt-0.5">

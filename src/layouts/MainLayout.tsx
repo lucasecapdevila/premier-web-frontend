@@ -16,34 +16,31 @@ export const MainLayout: React.FC = () => {
 
   const navItemClass = (path: string): string => {
     const active = location.pathname.startsWith(path);
-    return `inline-flex items-center gap-2 px-3.5 py-2 text-xs font-semibold rounded-md transition-colors duration-150 ${
+    return `inline-flex items-center gap-2 px-3.5 py-2 text-xs font-semibold rounded-md transition-colors duration-150 cursor-pointer ${
       active
-        ? 'bg-[#FF0000] text-white shadow-sm'
-        : 'text-[#666666] hover:text-[#1A1A1A] hover:bg-[#EAEAEA]'
+        ? 'bg-brand text-white shadow-sm'
+        : 'text-content-secondary hover:text-content-primary hover:bg-surface-secondary'
     }`;
   };
 
   return (
     <div className="min-h-screen bg-canvas flex flex-col font-sans">
-      <header className="bg-white border-b border-stroke sticky top-0 z-40">
+      {/* Header fijo/sticky */}
+      <header className="bg-surface border-b border-stroke sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-14">
+            
+            {/* Logo y Enlaces */}
             <div className="flex items-center gap-6">
               <div 
                 onClick={() => navigate('/remitos')}
                 className="flex items-center gap-2.5 cursor-pointer"
               >
-                <div className="w-8 h-8 rounded bg-brand flex items-center justify-center text-white font-bold text-sm tracking-wider shadow-sm">
-                  P
-                </div>
-                <div>
-                  <span className="font-bold text-base tracking-tight text-content-primary block leading-none">
-                    Premier<span className="text-brand-hover">Web</span>
-                  </span>
-                  <span className="text-[10px] text-content-secondary tracking-wide block uppercase font-medium">
-                    Gestión de Remitos
-                  </span>
-                </div>
+                <img 
+                  src="/public/logoBroalLayout.png" 
+                  alt="Broal Motos Logo" 
+                  className="h-10 w-auto object-contain cursor-pointer" 
+                />
               </div>
 
               <nav className="hidden sm:flex items-center gap-1.5 ml-4">
@@ -58,6 +55,7 @@ export const MainLayout: React.FC = () => {
               </nav>
             </div>
 
+            {/* Usuario y Logout */}
             <div className="flex items-center gap-3">
               <div className="hidden md:flex flex-col text-right">
                 <span className="text-xs font-semibold text-content-primary">
@@ -73,7 +71,7 @@ export const MainLayout: React.FC = () => {
               <button
                 type="button"
                 onClick={handleLogout}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-content-secondary hover:text-[#991B1B] hover:bg-[#FEE2E2] rounded-md transition-colors duration-150"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-content-secondary hover:text-brand-dark hover:bg-brand-soft rounded-md transition-colors duration-150 cursor-pointer"
                 title="Cerrar sesión"
               >
                 <LogOut size={14} />
@@ -84,12 +82,14 @@ export const MainLayout: React.FC = () => {
         </div>
       </header>
 
-      <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+      {/* Main con padding inferior amplio (pb-24) para que el footer no tape tablas/formularios */}
+      <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 pb-24">
         <Outlet />
       </main>
 
-      <footer className="bg-white border-t border-stroke py-3 text-center text-xs text-content-secondary">
-        Premier Motos &copy; 2026 &mdash; Sistema de Control Interno y Remitos
+      {/* Footer fijado siempre a la vista */}
+      <footer className="fixed bottom-0 inset-x-0 bg-surface border-t border-stroke py-6 text-center text-xs text-content-secondary z-30 shadow-[0_-2px_10px_rgba(0,0,0,0.03)]">
+        Broal Motos &copy; 2026 &mdash; Sistema de Control Interno y Remitos
       </footer>
     </div>
   );

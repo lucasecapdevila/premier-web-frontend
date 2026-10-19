@@ -1,28 +1,28 @@
-import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-hot-toast';
-import { 
-  FileText, 
-  Search, 
-  RotateCcw, 
-  Plus, 
-  CheckCircle2, 
-  Ban, 
-  Clock, 
-  ArrowRight,
-  Eye
-} from 'lucide-react';
-import { useRemitosStore } from '../stores/useRemitosStore';
-import type { RemitoConsolidado } from '../types';
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
+import {
+  Search,
+  RotateCcw,
+  Plus,
+  CheckCircle2,
+  Ban,
+  Clock,
+  Eye,
+} from "lucide-react";
+import { useRemitosStore } from "../stores/useRemitosStore";
+import type { RemitoConsolidado } from "../types";
+import { obtenerNombreSucursal } from '../lib/catalogos';
 
 export const RemitosPage: React.FC = () => {
-  const { remitos, loading, cargarRemitos, filtroTexto, setFiltroTexto } = useRemitosStore();
+  const { remitos, loading, cargarRemitos, filtroTexto, setFiltroTexto } =
+    useRemitosStore();
   const navigate = useNavigate();
 
   useEffect(() => {
     cargarRemitos().catch((error: unknown) => {
       const err = error as { response?: { data?: { message?: string } } };
-      toast.error(err.response?.data?.message ?? 'Error al obtener remitos');
+      toast.error(err.response?.data?.message ?? "Error al obtener remitos");
     });
   }, [cargarRemitos]);
 
@@ -42,7 +42,6 @@ export const RemitosPage: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-stroke pb-4">
         <div>
           <h1 className="text-2xl font-bold text-content-primary tracking-tight flex items-center gap-2">
-            <FileText className="text-brand-hover" size={22} />
             Gestión de Remitos
           </h1>
           <p className="text-xs text-content-secondary mt-0.5">
@@ -58,12 +57,12 @@ export const RemitosPage: React.FC = () => {
             className="p-2 bg-white hover:bg-surface-hover text-content-secondary hover:text-content-primary rounded-md border border-stroke transition-colors duration-150 disabled:opacity-50"
             title="Recargar listado"
           >
-            <RotateCcw size={15} className={loading ? 'animate-spin' : ''} />
+            <RotateCcw size={15} className={loading ? "animate-spin" : ""} />
           </button>
 
           <button
             type="button"
-            onClick={() => navigate('/remitos/nuevo')}
+            onClick={() => navigate("/remitos/nuevo")}
             className="inline-flex items-center gap-2 px-3.5 py-2 bg-brand-hover hover:bg-brand-pressed text-white text-xs font-semibold rounded-md shadow-sm transition-colors duration-150"
           >
             <Plus size={15} />
@@ -84,7 +83,7 @@ export const RemitosPage: React.FC = () => {
         {filtroTexto && (
           <button
             type="button"
-            onClick={() => setFiltroTexto('')}
+            onClick={() => setFiltroTexto("")}
             className="text-[11px] text-content-secondary hover:text-content-primary ml-2"
           >
             Limpiar
@@ -110,14 +109,23 @@ export const RemitosPage: React.FC = () => {
             <tbody className="divide-y divide-stroke">
               {loading ? (
                 <tr>
-                  <td colSpan={8} className="py-10 text-center text-content-secondary">
-                    <RotateCcw className="animate-spin inline-block mr-2 text-brand-hover" size={16} />
+                  <td
+                    colSpan={8}
+                    className="py-10 text-center text-content-secondary"
+                  >
+                    <RotateCcw
+                      className="animate-spin inline-block mr-2 text-brand-hover"
+                      size={16}
+                    />
                     Cargando remitos...
                   </td>
                 </tr>
               ) : remitosFiltrados.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="py-10 text-center text-content-secondary">
+                  <td
+                    colSpan={8}
+                    className="py-10 text-center text-content-secondary"
+                  >
                     No se encontraron remitos con los criterios aplicados.
                   </td>
                 </tr>
@@ -126,7 +134,9 @@ export const RemitosPage: React.FC = () => {
                   <tr
                     key={remito.nro}
                     className={`hover:bg-surface-hover transition-colors duration-150 ${
-                      remito.es_anulado ? 'bg-[#FEE2E2]/30 text-content-secondary' : ''
+                      remito.es_anulado
+                        ? "bg-[#FEE2E2]/30 text-content-secondary"
+                        : ""
                     }`}
                   >
                     <td className="py-3 px-4 font-mono font-bold text-content-primary">
@@ -134,25 +144,28 @@ export const RemitosPage: React.FC = () => {
                     </td>
 
                     <td className="py-3 px-4 text-content-secondary">
-                      {remito.fecha.replace(/(\d{4})(\d{2})(\d{2})/, '$3/$2/$1')}
+                      {remito.fecha.replace(
+                        /(\d{4})(\d{2})(\d{2})/,
+                        "$3/$2/$1",
+                      )}
                     </td>
 
+                    {/* 1. Columna Origen: Muestra solo el nombre descriptivo (ej. "Compras") */}
                     <td className="py-3 px-4 font-medium text-content-primary">
-                      {remito.de_nombre}{' '}
-                      <span className="text-[11px] text-content-secondary font-mono">({remito.de})</span>
+                      {remito.de_nombre || obtenerNombreSucursal(remito.de) || "Desconocido"}
                     </td>
 
+                    {/* 2. Columna Destino: Muestra solo la flecha y el nombre descriptivo (ej. "Casa Central") */}
                     <td className="py-3 px-4 font-medium text-content-primary">
                       <div className="flex items-center gap-1.5">
-                        <ArrowRight size={12} className="text-content-secondary" />
-                        <span>{remito.a_nombre}</span>{' '}
-                        <span className="text-[11px] text-content-secondary font-mono">({remito.a})</span>
+                        <span>{remito.a_nombre || obtenerNombreSucursal(remito.a) || "Desconocido"}</span>
                       </div>
                     </td>
 
+                    {/* 3. Columna Unidades: Formateado como entero exacto sin decimales (ej. 1) */}
                     <td className="py-3 px-4 text-center font-mono font-semibold">
-                      <span className="inline-block px-2 py-0.5 bg-surface-secondary border border-stroke rounded text-[11px]">
-                        {remito.total_unidades}
+                      <span className="inline-block px-2 py-0.5 bg-surface-secondary border border-stroke rounded text-[11px] text-content-primary">
+                        {Math.trunc(Number(remito.total_unidades) || 0)}
                       </span>
                     </td>
 
@@ -188,7 +201,7 @@ export const RemitosPage: React.FC = () => {
                       <button
                         type="button"
                         onClick={() => navigate(`/remitos/${remito.nro}`)}
-                        className="inline-flex items-center gap-1 px-2.5 py-1 bg-white hover:bg-surface-secondary text-content-primary text-[11px] font-semibold rounded border border-stroke transition-colors duration-150"
+                        className="inline-flex items-center gap-1 px-2.5 py-1 bg-white hover:bg-surface-secondary text-content-primary text-[11px] font-semibold rounded border border-stroke transition-colors duration-150 cursor-pointer"
                       >
                         <Eye size={12} />
                         <span>Ver</span>

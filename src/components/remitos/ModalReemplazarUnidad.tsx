@@ -4,26 +4,11 @@ import {
   getUnidadesDisponiblesReemplazo,
   reemplazarUnidadRemito,
 } from '../../services/remitos.service';
+import type {
+  UnidadDisponibleReemplazo,
+  UnidadRemitoSeleccionada,
+} from '../../types/remitos';
 import { ModalTrazabilidadUnidad } from '../unidades/ModalTrazabilidadUnidad';
-
-export interface UnidadRemitoSeleccionada {
-  unicode: number;
-  motor: string;
-  chasis: string;
-  color_nombre?: string;
-  codart: number;
-  descripcion?: string;
-}
-
-export interface UnidadDisponibleStock {
-  id: number;
-  unicode: number;
-  motor: string;
-  chasis: string;
-  color_codigo: string;
-  color_nombre: string;
-  codart: number;
-}
 
 interface Props {
   numeroRemito: number;
@@ -42,7 +27,7 @@ export function ModalReemplazarUnidad({
   onClose,
   onSuccess,
 }: Props) {
-  const [disponibles, setDisponibles] = useState<UnidadDisponibleStock[]>([]);
+  const [disponibles, setDisponibles] = useState<UnidadDisponibleReemplazo[]>([]);
   const [cargandoDisponibles, setCargandoDisponibles] = useState(false);
   const [errorCarga, setErrorCarga] = useState<string | null>(null);
 
@@ -54,45 +39,45 @@ export function ModalReemplazarUnidad({
   const [unicodeTrazabilidad, setUnicodeTrazabilidad] = useState<number | null>(null);
 
   useEffect(() => {
-  if (!unidadSaliente) return;
+    if (!unidadSaliente) return;
 
-  let isMounted = true;
+    let isMounted = true;
 
-  const cargarDisponibles = async () => {
-    try {
-      setCargandoDisponibles(true);
-      setErrorCarga(null);
-      setUnicodeEntrante(null);
+    const cargarDisponibles = async () => {
+      try {
+        setCargandoDisponibles(true);
+        setErrorCarga(null);
+        setUnicodeEntrante(null);
 
-      const data = await getUnidadesDisponiblesReemplazo(
-        numeroRemito,
-        unidadSaliente.codart,
-      );
+        const data = await getUnidadesDisponiblesReemplazo(
+          numeroRemito,
+          unidadSaliente.codart,
+        );
 
-      if (isMounted) {
-        setDisponibles(data as UnidadDisponibleStock[]);
+        if (isMounted) {
+          setDisponibles(data);
+        }
+      } catch (err: unknown) {
+        if (isMounted) {
+          const msg =
+            err instanceof Error
+              ? err.message
+              : 'Error al obtener unidades disponibles en origen';
+          setErrorCarga(msg);
+        }
+      } finally {
+        if (isMounted) {
+          setCargandoDisponibles(false);
+        }
       }
-    } catch (err: unknown) {
-      if (isMounted) {
-        const msg =
-          err instanceof Error
-            ? err.message
-            : 'Error al obtener unidades disponibles en origen';
-        setErrorCarga(msg);
-      }
-    } finally {
-      if (isMounted) {
-        setCargandoDisponibles(false);
-      }
-    }
-  };
+    };
 
-  void cargarDisponibles();
+    void cargarDisponibles();
 
-  return () => {
-    isMounted = false;
-  };
-}, [numeroRemito, unidadSaliente]);
+    return () => {
+      isMounted = false;
+    };
+  }, [numeroRemito, unidadSaliente]);
 
   if (!unidadSaliente) return null;
 
@@ -136,7 +121,6 @@ export function ModalReemplazarUnidad({
     <>
       <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 p-4">
         <div className="w-full max-w-2xl rounded bg-white shadow-2xl border border-stroke flex flex-col max-h-[90vh]">
-          
           {/* Header */}
           <div className="flex items-center justify-between border-b border-stroke px-6 py-4 bg-canvas">
             <div>
@@ -157,11 +141,10 @@ export function ModalReemplazarUnidad({
             </button>
           </div>
 
-          {/* Form */}
+          {/* Formulario */}
           <form onSubmit={handleSubmit} className="flex flex-col flex-1 overflow-hidden">
             <div className="p-6 overflow-y-auto flex-1 space-y-5">
-              
-              {/* Resumen Unidad Saliente */}
+              {/* Unidad Saliente */}
               <div className="rounded border border-red-200 bg-red-50/70 p-4 space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold uppercase tracking-wider text-red-800">
@@ -184,10 +167,12 @@ export function ModalReemplazarUnidad({
 
                 <div className="grid grid-cols-2 gap-2 text-[11px] font-mono text-gray-600 bg-white p-2 rounded border border-red-100">
                   <div>
-                    <span className="font-semibold text-gray-500">Motor:</span> {unidadSaliente.motor}
+                    <span className="font-semibold text-gray-500 font-sans">Motor:</span>{' '}
+                    {unidadSaliente.motor}
                   </div>
                   <div>
-                    <span className="font-semibold text-gray-500">Chasis:</span> {unidadSaliente.chasis}
+                    <span className="font-semibold text-gray-500 font-sans">Chasis:</span>{' '}
+                    {unidadSaliente.chasis}
                   </div>
                   {unidadSaliente.color_nombre && (
                     <div className="col-span-2">
@@ -280,7 +265,7 @@ export function ModalReemplazarUnidad({
                 )}
               </div>
 
-              {/* Motivo Obligatorio */}
+              {/* Motivo */}
               <div className="space-y-1">
                 <label
                   htmlFor="motivo-reemplazo"
@@ -330,7 +315,7 @@ export function ModalReemplazarUnidad({
         </div>
       </div>
 
-      {/* Modal Secundario de Trazabilidad */}
+      {/* Modal de Trazabilidad */}
       {unicodeTrazabilidad && (
         <ModalTrazabilidadUnidad
           key={unicodeTrazabilidad}

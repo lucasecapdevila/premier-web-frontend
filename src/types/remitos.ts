@@ -98,3 +98,19 @@ export interface RespuestaReemplazoUnidad {
   };
   motivo: string;
 }
+
+// Parámetros de consulta para paginación
+export interface RemitoListParams {
+  limit?: number;
+  page?: number;
+}
+
+// Representa a la unidad activa seleccionada desde la tabla física para reemplazar
+export interface UnidadRemitoSeleccionada {
+  unicode: number;
+  motor: string;
+  chasis: string;
+  color_nombre?: string;
+  codart: number;
+  descripcion?: string;
+}

@@ -1,22 +1,23 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { toast } from 'react-hot-toast';
-import { 
-  ArrowLeft, 
-  FileText, 
-  Calendar, 
-  User, 
-  ArrowRight, 
-  CheckCircle2, 
-  Ban, 
-  Clock, 
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
+import {
+  ArrowLeft,
+  FileText,
+  Calendar,
+  User,
+  ArrowRight,
+  CheckCircle2,
+  Ban,
+  Clock,
   RotateCcw,
   AlertTriangle,
-  RefreshCw
-} from 'lucide-react';
-import { api } from '../lib/api';
-import { ModalReemplazarUnidad } from '../components/ModalReemplazarUnidad';
-import type { RemitoDetalleResponse, UnidadDetalle } from '../types';
+  RefreshCw,
+} from "lucide-react";
+import { api } from "../lib/api";
+import { ModalReemplazarUnidad } from "../components/ModalReemplazarUnidad";
+import type { RemitoDetalleResponse, UnidadDetalle } from "../types";
+import { ModalTrazabilidadUnidad } from "../components/unidades/ModalTrazabilidadUnidad";
 
 export const RemitoDetallePage: React.FC = () => {
   const { numero } = useParams<{ numero: string }>();
@@ -25,9 +26,13 @@ export const RemitoDetallePage: React.FC = () => {
   const [data, setData] = useState<RemitoDetalleResponse | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [modalAnulacion, setModalAnulacion] = useState<boolean>(false);
-  const [motivoAnula, setMotivoAnula] = useState<string>('');
+  const [motivoAnula, setMotivoAnula] = useState<string>("");
   const [procesandoAnula, setProcesandoAnula] = useState<boolean>(false);
-  const [unidadParaReemplazo, setUnidadParaReemplazo] = useState<UnidadDetalle | null>(null);
+  const [unidadParaReemplazo, setUnidadParaReemplazo] =
+    useState<UnidadDetalle | null>(null);
+  const [unicodeTrazabilidad, setUnicodeTrazabilidad] = useState<number | null>(
+    null,
+  );
 
   const refrescarDatos = async (): Promise<void> => {
     if (!numero) return;
@@ -37,8 +42,8 @@ export const RemitoDetallePage: React.FC = () => {
       setData(res.data);
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } } };
-      toast.error(err.response?.data?.message ?? 'Error al obtener el remito');
-      navigate('/remitos');
+      toast.error(err.response?.data?.message ?? "Error al obtener el remito");
+      navigate("/remitos");
     } finally {
       setLoading(false);
     }
@@ -58,9 +63,11 @@ export const RemitoDetallePage: React.FC = () => {
       } catch (error: unknown) {
         if (activo) {
           const err = error as { response?: { data?: { message?: string } } };
-          toast.error(err.response?.data?.message ?? 'Error al obtener el remito');
+          toast.error(
+            err.response?.data?.message ?? "Error al obtener el remito",
+          );
           setLoading(false);
-          navigate('/remitos');
+          navigate("/remitos");
         }
       }
     };
@@ -75,7 +82,7 @@ export const RemitoDetallePage: React.FC = () => {
   const handleAnular = async (e: SubmitEvent): Promise<void> => {
     e.preventDefault();
     if (!motivoAnula.trim()) {
-      toast.error('El motivo de anulación es obligatorio');
+      toast.error("El motivo de anulación es obligatorio");
       return;
     }
 
@@ -86,11 +93,11 @@ export const RemitoDetallePage: React.FC = () => {
       });
       toast.success(`Remito #${numero} anulado exitosamente`);
       setModalAnulacion(false);
-      setMotivoAnula('');
+      setMotivoAnula("");
       await refrescarDatos();
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } } };
-      toast.error(err.response?.data?.message ?? 'Error al anular el remito');
+      toast.error(err.response?.data?.message ?? "Error al anular el remito");
     } finally {
       setProcesandoAnula(false);
     }
@@ -116,7 +123,7 @@ export const RemitoDetallePage: React.FC = () => {
         <div className="flex items-center gap-3">
           <button
             type="button"
-            onClick={() => navigate('/remitos')}
+            onClick={() => navigate("/remitos")}
             className="p-1.5 bg-white hover:bg-surface-secondary text-content-secondary hover:text-content-primary rounded-md border border-stroke transition-colors duration-150"
             title="Volver"
           >
@@ -140,7 +147,12 @@ export const RemitoDetallePage: React.FC = () => {
               )}
             </div>
             <p className="text-xs text-content-secondary mt-0.5">
-              Tipo: <strong className="text-content-primary">{esCompra ? 'Compra (Alta Directa)' : 'Traslado entre Sucursales'}</strong>
+              Tipo:{" "}
+              <strong className="text-content-primary">
+                {esCompra
+                  ? "Compra (Alta Directa)"
+                  : "Traslado entre Sucursales"}
+              </strong>
             </p>
           </div>
         </div>
@@ -163,8 +175,10 @@ export const RemitoDetallePage: React.FC = () => {
         <div className="p-3.5 bg-[#FEE2E2] border border-error/30 rounded-lg flex items-start gap-2.5 text-[#991B1B] text-xs">
           <AlertTriangle className="shrink-0 mt-0.5" size={16} />
           <div>
-            <strong className="font-semibold block">Motivo de Anulación:</strong>
-            {remito.motivo_anula || 'Sin motivo especificado.'}
+            <strong className="font-semibold block">
+              Motivo de Anulación:
+            </strong>
+            {remito.motivo_anula || "Sin motivo especificado."}
           </div>
         </div>
       )}
@@ -173,7 +187,9 @@ export const RemitoDetallePage: React.FC = () => {
         <div className="p-3.5 bg-warning-soft border border-warning/30 rounded-lg flex items-start gap-2.5 text-warning-dark text-xs">
           <Clock className="shrink-0 mt-0.5" size={16} />
           <div>
-            <strong className="font-semibold block">Modificación Registrada:</strong>
+            <strong className="font-semibold block">
+              Modificación Registrada:
+            </strong>
             {remito.motivo_edic}
           </div>
         </div>
@@ -187,14 +203,22 @@ export const RemitoDetallePage: React.FC = () => {
           </div>
           <div className="space-y-0.5 text-xs">
             <div>
-              <span className="text-content-secondary">De:</span>{' '}
-              <span className="font-semibold text-content-primary">{remito.de_nombre}</span>{' '}
-              <span className="text-content-secondary font-mono text-[11px]">({remito.de})</span>
+              <span className="text-content-secondary">De:</span>{" "}
+              <span className="font-semibold text-content-primary">
+                {remito.de_nombre}
+              </span>{" "}
+              <span className="text-content-secondary font-mono text-[11px]">
+                ({remito.de})
+              </span>
             </div>
             <div>
-              <span className="text-content-secondary">A:</span>{' '}
-              <span className="font-semibold text-content-primary">{remito.a_nombre}</span>{' '}
-              <span className="text-content-secondary font-mono text-[11px]">({remito.a})</span>
+              <span className="text-content-secondary">A:</span>{" "}
+              <span className="font-semibold text-content-primary">
+                {remito.a_nombre}
+              </span>{" "}
+              <span className="text-content-secondary font-mono text-[11px]">
+                ({remito.a})
+              </span>
             </div>
           </div>
         </div>
@@ -206,7 +230,7 @@ export const RemitoDetallePage: React.FC = () => {
           </div>
           <div className="space-y-0.5 text-xs">
             <div className="font-semibold text-content-primary">
-              {remito.fecha.replace(/(\d{4})(\d{2})(\d{2})/, '$3/$2/$1')}
+              {remito.fecha.replace(/(\d{4})(\d{2})(\d{2})/, "$3/$2/$1")}
             </div>
             <div>
               {remito.en_ventana_24h ? (
@@ -214,7 +238,9 @@ export const RemitoDetallePage: React.FC = () => {
                   <Clock size={11} /> Dentro de la ventana de 24 horas
                 </span>
               ) : (
-                <span className="text-content-secondary text-[11px]">Ventana de edición cerrada</span>
+                <span className="text-content-secondary text-[11px]">
+                  Ventana de edición cerrada
+                </span>
               )}
             </div>
           </div>
@@ -227,11 +253,16 @@ export const RemitoDetallePage: React.FC = () => {
           </div>
           <div className="space-y-0.5 text-xs">
             <div>
-              <span className="text-content-secondary">Operador:</span>{' '}
-              <span className="font-mono font-medium text-content-primary">{remito.operador}</span>
+              <span className="text-content-secondary">Operador:</span>{" "}
+              <span className="font-mono font-medium text-content-primary">
+                {remito.operador}
+              </span>
             </div>
             <div className="text-content-secondary">
-              Total Unidades: <span className="font-semibold text-content-primary font-mono">{data.total_unidades}</span>
+              Total Unidades:{" "}
+              <span className="font-semibold text-content-primary font-mono">
+                {data.total_unidades}
+              </span>
             </div>
           </div>
         </div>
@@ -256,10 +287,18 @@ export const RemitoDetallePage: React.FC = () => {
           <tbody className="divide-y divide-stroke">
             {articulos.map((art) => (
               <tr key={art.codart}>
-                <td className="py-2.5 px-4 font-mono font-bold text-content-primary">{art.codart}</td>
-                <td className="py-2.5 px-4">{art.descripcion || 'Sin descripción'}</td>
-                <td className="py-2.5 px-4 text-center font-mono font-semibold">{art.cantidad}</td>
-                <td className="py-2.5 px-4 text-content-secondary text-[11px]">{art.observa || '-'}</td>
+                <td className="py-2.5 px-4 font-mono font-bold text-content-primary">
+                  {art.codart}
+                </td>
+                <td className="py-2.5 px-4">
+                  {art.descripcion || "Sin descripción"}
+                </td>
+                <td className="py-2.5 px-4 text-center font-mono font-semibold">
+                  {art.cantidad}
+                </td>
+                <td className="py-2.5 px-4 text-content-secondary text-[11px]">
+                  {art.observa || "-"}
+                </td>
               </tr>
             ))}
           </tbody>
@@ -286,17 +325,27 @@ export const RemitoDetallePage: React.FC = () => {
           </thead>
           <tbody className="divide-y divide-stroke">
             {unidades.map((u) => (
-              <tr key={u.id} className="hover:bg-surface-hover transition-colors duration-150">
-                <td className="py-2.5 px-4 font-mono font-bold text-content-primary">#{u.unicode}</td>
-                <td className="py-2.5 px-4 font-mono text-[11px] text-content-primary">{u.motor}</td>
-                <td className="py-2.5 px-4 font-mono text-[11px] text-content-primary">{u.chasis}</td>
+              <tr
+                key={u.id}
+                className="hover:bg-surface-hover transition-colors duration-150"
+              >
+                <td className="py-2.5 px-4 font-mono font-bold text-content-primary">
+                  #{u.unicode}
+                </td>
+                <td className="py-2.5 px-4 font-mono text-[11px] text-content-primary">
+                  {u.motor}
+                </td>
+                <td className="py-2.5 px-4 font-mono text-[11px] text-content-primary">
+                  {u.chasis}
+                </td>
                 <td className="py-2.5 px-4">
                   <span className="inline-block px-1.5 py-0.5 rounded text-[11px] bg-surface-secondary border border-stroke text-content-primary">
                     {u.color_nombre}
                   </span>
                 </td>
                 <td className="py-2.5 px-4 text-content-secondary">
-                  {u.descripcion} <span className="font-mono text-[11px]">({u.codart})</span>
+                  {u.descripcion}{" "}
+                  <span className="font-mono text-[11px]">({u.codart})</span>
                 </td>
                 <td className="py-2.5 px-4 text-right">
                   {!remito.es_anulado && !esCompra && remito.en_ventana_24h ? (
@@ -315,6 +364,16 @@ export const RemitoDetallePage: React.FC = () => {
                     </span>
                   )}
                 </td>
+                <td className="px-4 py-2 font-mono text-xs">
+                  <button
+                    type="button"
+                    onClick={() => setUnicodeTrazabilidad(u.unicode)}
+                    className="font-mono text-xs text-blue-600 hover:text-brand-hover hover:underline font-semibold cursor-pointer"
+                    title="Ver historial de trazabilidad"
+                  >
+                    #{u.unicode}
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -329,10 +388,14 @@ export const RemitoDetallePage: React.FC = () => {
               Confirmar Anulación del Remito #{remito.nro}
             </h3>
             <p className="text-xs text-content-secondary mb-4">
-              Esta acción revertirá las ubicaciones de stock o aplicará la baja lógica correspondiente según el origen del movimiento.
+              Esta acción revertirá las ubicaciones de stock o aplicará la baja
+              lógica correspondiente según el origen del movimiento.
             </p>
 
-            <form onSubmit={(e) => void handleAnular(e.nativeEvent)} className="space-y-4">
+            <form
+              onSubmit={(e) => void handleAnular(e.nativeEvent)}
+              className="space-y-4"
+            >
               <div>
                 <label className="block text-xs font-semibold text-content-primary uppercase mb-1.5">
                   Motivo de Anulación (* Obligatorio)
@@ -361,7 +424,7 @@ export const RemitoDetallePage: React.FC = () => {
                   disabled={procesandoAnula}
                   className="px-3.5 py-2 bg-brand-hover hover:bg-brand-pressed text-white rounded-md text-xs font-semibold transition-colors duration-150 shadow-sm disabled:opacity-50"
                 >
-                  {procesandoAnula ? 'Anulando...' : 'Confirmar Anulación'}
+                  {procesandoAnula ? "Anulando..." : "Confirmar Anulación"}
                 </button>
               </div>
             </form>
@@ -377,6 +440,14 @@ export const RemitoDetallePage: React.FC = () => {
           unidadSaliente={unidadParaReemplazo}
           onClose={() => setUnidadParaReemplazo(null)}
           onSuccess={refrescarDatos}
+        />
+      )}
+
+      {unicodeTrazabilidad && (
+        <ModalTrazabilidadUnidad
+          key={unicodeTrazabilidad}
+          unicode={unicodeTrazabilidad}
+          onClose={() => setUnicodeTrazabilidad(null)}
         />
       )}
     </div>
